@@ -3,7 +3,7 @@ import queryString from "query-string";
 
 export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
   /** NEW */
-  postt: async ({ resource, variables, meta, query }) => {
+  post: async ({ resource, variables, meta, query }) => {
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
       : `${apiUrl}/${resource}`;
@@ -26,7 +26,7 @@ export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
     };
   },
 
-  gett: async ({ resource, meta, query }) => {
+  get: async ({ resource, meta, query }) => {
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
       : `${apiUrl}/${resource}`;
@@ -47,7 +47,7 @@ export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
     };
   },
 
-  deletee: async ({ resource, variables, meta, query }) => {
+  delete: async ({ resource, variables, meta, query }) => {
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
       : `${apiUrl}/${resource}`;
@@ -67,7 +67,7 @@ export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
     };
   },
 
-  postFormm: async ({ resource, meta, query, variables }) => {
+  postForm: async ({ resource, meta, query, variables }) => {
     let url = `${apiUrl}/${resource}`;
     const urlQuery = `${apiUrl}/${resource}/?${queryString.stringify({
       ...query,
