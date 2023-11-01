@@ -1,135 +1,232 @@
 import { reqresAxios } from "./utils";
 import queryString from "query-string";
 
-export const reqresDataProvider = (
-    apiUrl,
-    httpClient = reqresAxios
-) => ({
-    getList: async ({ resource, pagination, meta }) => {
-        const url = `${apiUrl}/${resource}`;
+export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
+  /** NEW */
+  postt: async ({ resource, variables, meta, query }) => {
+    const url = query
+      ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
+      : `${apiUrl}/${resource}`;
 
-        const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "post";
 
-        const { headers: headersFromMeta, method } = meta ?? {};
-        const requestMethod = method ?? "get";
+    const { data, status, statusText } = await httpClient[requestMethod](
+      url,
+      variables,
+      {
+        headers,
+      }
+    );
 
-        const query = {
-            page: Number,
-            per_page: Number,
-        }
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
 
-        if (mode === "server") {
-            query.page = current;
-            query.per_page = pageSize;
-        }
+  gett: async ({ resource, meta, query }) => {
+    const url = query
+      ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
+      : `${apiUrl}/${resource}`;
 
-        const { data, status, statusText ,headers } = await httpClient[requestMethod](
-            `${url}?${queryString.stringify(query)}}`,
-            {
-                headers: headersFromMeta,
-            }
-        );
+    console.log("url -> ", url);
 
-        return {
-            page: data?.page,
-            per_page: data?.per_page,
-            total: data?.total,
-            total_pages: data?.total_pages,
-            data: data?.data,
-            status,
-            statusText,
-        };
-    },
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "get";
 
-    getMany: async ({ resource, ids, meta }) => {
-        const { headers, method } = meta ?? {};
-        const requestMethod = method ?? "get";
+    const { data, status, statusText } = await httpClient[requestMethod](url, {
+      headers,
+    });
 
-        const { data, status, statusText } = await httpClient[requestMethod](
-            `${apiUrl}/${resource}?${queryString.stringify({ id: ids })}`,
-            { headers }
-        );
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
 
-        return {
-            data,
-            status,
-            statusText,
-        };
-    },
+  deletee: async ({ resource, variables, meta, query }) => {
+    const url = query
+      ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
+      : `${apiUrl}/${resource}`;
 
-    create: async ({ resource, variables, meta }) => {
-        const url = `${apiUrl}/${resource}`;
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "delete";
 
-        const { headers, method } = meta ?? {};
-        const requestMethod = method ?? "post";
+    const { data, status, statusText } = await httpClient[requestMethod](url, {
+      data: variables,
+      headers,
+    });
 
-        const { data, status, statusText } = await httpClient[requestMethod](url, variables, {
-            headers,
-        });
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
 
-        console.log("status =>", status);
+  postFormm: async ({ resource, meta, query, variables }) => {
+    let url = `${apiUrl}/${resource}`;
+    const urlQuery = `${apiUrl}/${resource}/?${queryString.stringify({
+      ...query,
+    })}`;
+    url = query ? urlQuery : url;
 
-        return {
-            data,
-            status,
-            statusText,
-        };
-    },
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "postForm";
 
-    update: async ({ resource, id, variables, meta }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
+    const { data, status, statusText } = await httpClient[requestMethod](
+      url,
+      variables,
+      {
+        headers,
+      }
+    );
 
-        const { headers, method } = meta ?? {};
-        const requestMethod = method ?? "put";
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
 
-        const { data, status, statusText } = await httpClient[requestMethod](url, variables, {
-            headers,
-        });
+  /** END NEW */
 
-        return {
-            data,
-            status,
-            statusText,
-        };
-    },
+  getList: async ({ resource, pagination, meta }) => {
+    const url = `${apiUrl}/${resource}`;
 
-    getOne: async ({ resource, id, meta }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
+    const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
 
-        const { headers, method } = meta ?? {};
-        const requestMethod = method ?? "get";
+    const { headers: headersFromMeta, method } = meta ?? {};
+    const requestMethod = method ?? "get";
 
-        const { data, status, statusText } = await httpClient[requestMethod](url, { headers });
+    const query = {
+      page: Number,
+      per_page: Number,
+    };
 
-        return {
-            data,
-            status,
-            statusText,
-        };
-    },
+    if (mode === "server") {
+      query.page = current;
+      query.per_page = pageSize;
+    }
 
-    deleteOne: async ({ resource, id, variables, meta }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
+    const { data, status, statusText, headers } = await httpClient[
+      requestMethod
+    ](`${url}?${queryString.stringify(query)}}`, {
+      headers: headersFromMeta,
+    });
 
-        const { headers, method } = meta ?? {};
-        const requestMethod = method ?? "delete";
+    return {
+      page: data?.page,
+      per_page: data?.per_page,
+      total: data?.total,
+      total_pages: data?.total_pages,
+      data: data?.data,
+      status,
+      statusText,
+    };
+  },
 
-        const { data, status, statusText } = await httpClient[requestMethod](url, {
-            data: variables,
-            headers,
-        });
+  getMany: async ({ resource, ids, meta }) => {
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "get";
 
-        return {
-            data,
-            status,
-            statusText,
-        };
-    },
+    const { data, status, statusText } = await httpClient[requestMethod](
+      `${apiUrl}/${resource}?${queryString.stringify({ id: ids })}`,
+      { headers }
+    );
 
-    getApiUrl: () => {
-        return apiUrl;
-    },
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
 
-    custom: async () => {
-    },
+  create: async ({ resource, variables, meta }) => {
+    const url = `${apiUrl}/${resource}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "post";
+
+    const { data, status, statusText } = await httpClient[requestMethod](
+      url,
+      variables,
+      {
+        headers,
+      }
+    );
+
+    console.log("status =>", status);
+
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
+
+  update: async ({ resource, id, variables, meta }) => {
+    const url = `${apiUrl}/${resource}/${id}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "put";
+
+    const { data, status, statusText } = await httpClient[requestMethod](
+      url,
+      variables,
+      {
+        headers,
+      }
+    );
+
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
+
+  getOne: async ({ resource, id, meta }) => {
+    const url = `${apiUrl}/${resource}/${id}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "get";
+
+    const { data, status, statusText } = await httpClient[requestMethod](url, {
+      headers,
+    });
+
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
+
+  deleteOne: async ({ resource, id, variables, meta }) => {
+    const url = `${apiUrl}/${resource}/${id}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = method ?? "delete";
+
+    const { data, status, statusText } = await httpClient[requestMethod](url, {
+      data: variables,
+      headers,
+    });
+
+    return {
+      data,
+      status,
+      statusText,
+    };
+  },
+
+  getApiUrl: () => {
+    return apiUrl;
+  },
+
+  custom: async () => {},
 });
