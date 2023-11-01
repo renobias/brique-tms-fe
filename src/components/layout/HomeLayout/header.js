@@ -51,7 +51,7 @@ export const Header = () => {
             navigate("/home", { replace: true });
           }}
         >
-          Norxel Queue
+          My Web
         </div>
         <div style={wrapperMenuHeaderStyles}>
           <Space align="center">
