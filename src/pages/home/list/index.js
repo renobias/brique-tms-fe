@@ -1,8 +1,10 @@
 import { globalStateContext } from "../../../stateProvider";
 import { useContext, useEffect } from "react";
 import { HomeListComponent } from "../../../components/pages/home/components/list";
+import { useWebGateSecurity } from "../../../hooks/security/useWebGateSecurity";
 
-export default function Index() {
+export default function Index(context) {
+  useWebGateSecurity(context);
   const globalState = useContext(globalStateContext);
   const { currentLayout, setCurrentLayout } = globalState.layout.current;
   useEffect(() => {

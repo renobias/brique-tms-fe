@@ -14,14 +14,14 @@ export const authProvider = {
       //   resource: "startShift",
       //   query: { username, mode, categoryId, counterNo, branchCode },
       // });
-      // user = {
-      //   username,
-      //   branchCode,
-      //   mode,
-      //   categoryId,
-      //   counterNo,
-      //   token: data?.token,
-      // };
+      user = {
+        username,
+        branchCode,
+        mode,
+        categoryId,
+        counterNo,
+        token: "test-token-klsdfhljsdhf",
+      };
     } catch (error) {
       return {
         success: false,
@@ -68,6 +68,12 @@ export const authProvider = {
       //     redirectTo: "/login",
       //   };
       // }
+
+      nookies.destroy(null, "auth");
+      return {
+        success: true,
+        redirectTo: "/login",
+      };
     } catch (error) {
       return {
         success: false,
@@ -91,6 +97,8 @@ export const authProvider = {
     if (cookies["auth"]) {
       return {
         authenticated: true,
+        logout: false,
+        redirectTo: "/",
       };
     }
 

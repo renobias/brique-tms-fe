@@ -6,6 +6,7 @@ import { reqresDataProvider } from "./rest-data-provider/reqres";
 import { Router } from "./router";
 import "./styles/globalStyles.scss";
 import { useBaseApi } from "./hooks/utility/useBaseApi";
+import { WebGateSecurity } from "./components/pages/security/WebGateSecurity";
 
 export default function App() {
   const baseApi = useBaseApi();
@@ -33,7 +34,9 @@ export default function App() {
         reqres: reqresDataProv,
       }}
     >
-      <RenderComponent />
+      <WebGateSecurity>
+        <RenderComponent />
+      </WebGateSecurity>
     </AppProvider>
   );
 }
