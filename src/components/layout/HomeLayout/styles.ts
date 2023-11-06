@@ -1,7 +1,14 @@
 import { colorTheme } from "../../../definitions";
 import { CSSProperties } from "react";
 
-export const containerHomeStyles = { height: "100vh", background: "transparent" }
+export const containerHomeStyles = { 
+        height: "100%", 
+        background: `url("/assets/img/bri-tech-bg.jpeg")`,
+        backgroundRepeat: "no-repeat",
+        width: "100%",
+        backgroundPosition: "70% 100%",
+        backgroundSize: "250vw 150vh" 
+    }
 export const containerHomeContentStyles = { backgroundColor: "transparent" }
 export const wrapperHomeContentStyles = {
     height: "100vh",

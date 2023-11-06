@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useRoutes } from "react-router-dom";
 import HomePage from "../pages/home";
-
+import LoginPage from "../pages/login";
 import React from "react";
 
 export const Router = () => {
@@ -8,6 +8,10 @@ export const Router = () => {
     {
       path: "/",
       element: <HomePage />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
     },
     {
       path: "/home",

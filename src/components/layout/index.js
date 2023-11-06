@@ -9,7 +9,7 @@ export const AppLayout = ({ type, children }) => {
       case "home":
         return <HomeLayout>{children}</HomeLayout>;
       default:
-        return <HomeLayout>{children}</HomeLayout>;
+        return <AuthLayout>{children}</AuthLayout>;
     }
   };
 
