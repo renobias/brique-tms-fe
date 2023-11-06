@@ -51,7 +51,7 @@ export const Header = () => {
             navigate("/home", { replace: true });
           }}
         >
-          My Web
+          Brique TMS
         </div>
         <div style={wrapperMenuHeaderStyles}>
           <Space align="center">
