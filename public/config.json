@@ -1,3 +1,4 @@
 {
+    "URL_SERVER_BRIQUE_TMS": "http://localhost:3001",
     "URL_SERVER_REQRES" : "https://reqres.in/api"
 }

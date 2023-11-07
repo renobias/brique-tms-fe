@@ -1,2 +1,4 @@
 import { reqresDataProvider } from "./reqres";
-export { reqresDataProvider }
+import { briqueTmsDataProvider } from "./briqueTms";
+
+export { reqresDataProvider, briqueTmsDataProvider };

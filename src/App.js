@@ -7,10 +7,18 @@ import { Router } from "./router";
 import "./styles/globalStyles.scss";
 import { useBaseApi } from "./hooks/utility/useBaseApi";
 import { WebGateSecurity } from "./components/pages/security/WebGateSecurity";
+import { reqresAxios } from "./rest-data-provider/reqres/utils";
+import { baseAPI } from "./definitions";
+import { briqueTmsDataProvider } from "./rest-data-provider";
 
 export default function App() {
-  const baseApi = useBaseApi();
-  const reqresDataProv = reqresDataProvider(baseApi);
+  const baseApiBriqueTms = useBaseApi();
+  const baseApiReqres = useBaseApi(reqresAxios);
+  baseAPI["briqueTms"] = baseApiBriqueTms;
+  baseAPI["reqres"] = baseApiReqres;
+
+  const reqresDataProv = reqresDataProvider(baseApiReqres);
+  const briqueTmsDataProv = briqueTmsDataProvider(baseApiBriqueTms);
   const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
@@ -24,13 +32,18 @@ export default function App() {
   const RenderComponent = ({ children }) => {
     const globalState = useContext(globalStateContext);
     const { currentLayout } = globalState.layout.current;
-    return <AppLayout type={currentLayout}>{baseApi && <Router />}</AppLayout>;
+    return (
+      <AppLayout type={currentLayout}>
+        {baseApiBriqueTms && <Router />}
+      </AppLayout>
+    );
   };
 
   return (
     <AppProvider
       dataProvider={{
-        default: reqresDataProv,
+        default: briqueTmsDataProv,
+        briqueTms: briqueTmsDataProv,
         reqres: reqresDataProv,
       }}
     >

@@ -1,26 +1,41 @@
+import { encryptContent } from "./crypto";
 import { baseAPI } from "./definitions";
-// import { simpleMovieDataProvider } from "./rest-data-provider";
+import { briqueTmsDataProvider } from "./rest-data-provider";
 import nookies from "nookies";
 
 export const authProvider = {
-  login: async ({ username, mode, categoryId, counterNo, branchCode }) => {
+  login: async ({ clientKey, email, password }) => {
     let user = null;
 
     try {
-      // loginMock({ username, mode, categoryId, counterNo, branchCode });
-      // const { data } = await queueMachineDataProvider(
-      //   baseAPI.queueMachine
-      // ).getQuery({
-      //   resource: "startShift",
-      //   query: { username, mode, categoryId, counterNo, branchCode },
-      // });
+      console.log("base api to send -> ", baseAPI.briqueTms);
+      const { data: dataHandshake } = await briqueTmsDataProvider(
+        baseAPI.briqueTms
+      ).post({
+        resource: "auth/handshake",
+        variables: clientKey,
+        meta: { headers: { "Content-Type": "text/plain" } },
+      });
+      const { handshakeCode, sharedKey } = dataHandshake;
+
+      const payload = {
+        clientKey,
+        sharedKey,
+        payload: {
+          email,
+          password,
+        },
+      };
+      const { data: dataLogin } = await briqueTmsDataProvider(
+        baseAPI.briqueTms
+      ).post({
+        resource: "auth/login",
+        variables: encryptContent(payload),
+        query: { hsCode: handshakeCode },
+        meta: { headers: { "Content-Type": "text/plain" } },
+      });
       user = {
-        username,
-        branchCode,
-        mode,
-        categoryId,
-        counterNo,
-        token: "test-token-klsdfhljsdhf",
+        ...dataLogin,
       };
     } catch (error) {
       return {

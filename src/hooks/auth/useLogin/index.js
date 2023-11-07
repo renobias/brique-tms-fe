@@ -3,6 +3,7 @@ import { useNotification } from "../../../hooks/utility";
 // import { useRouter } from "next/router";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getRandom32UniqueCode } from "../../../utility";
 
 export function useLogin() {
   const { openNotification } = useNotification();
@@ -13,17 +14,17 @@ export function useLogin() {
     errorMsg: null,
   });
 
-  async function fire({ username, mode, categoryId, counterNo, branchCode }) {
+  async function fire({ email, password }) {
+    const clientKey = getRandom32UniqueCode();
+    console.log("client key ->", clientKey);
     setState({
       ...state,
       isLoading: true,
     });
     const { success, redirectTo, error } = await authProvider.login({
-      username,
-      mode,
-      categoryId,
-      counterNo,
-      branchCode,
+      clientKey,
+      email,
+      password,
     });
     setState({
       ...state,
@@ -35,11 +36,11 @@ export function useLogin() {
       // replace({ pathname: redirectTo });
     }
     if (error) {
-      //   openNotification({
-      //     type: "error",
-      //     title: error?.name,
-      //     description: error?.message,
-      //   });
+      openNotification({
+        type: "error",
+        title: error?.name,
+        description: error?.message,
+      });
     }
     return { state };
   }
