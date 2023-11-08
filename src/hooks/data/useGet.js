@@ -35,7 +35,7 @@ export function useGet({
       });
       const { data, status, statusText } = await dataProvider(
         pickDataProvider(dataProviderNameFire || dataProviderName)
-      ).create({
+      ).get({
         resource: resourceFire || resource,
         variables: variablesFire || variables,
         meta: metaFire || meta,

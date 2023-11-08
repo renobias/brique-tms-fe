@@ -20,48 +20,34 @@ export const Sider = () => {
     </Menu.Item>
   );
 
-  const summaryListMenu = (
-    <Menu.Item key="summaryList" icon={<DashboardOutlined />}>
-      <Link to="/report/viewers">Summary</Link>
+  const structureFormMenu = (
+    <Menu.Item key="structureForm" icon={<DashboardOutlined />}>
+      <Link to="/form/structure">Structure</Link>
       {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
     </Menu.Item>
   );
+  const formMenu = (
+    <Menu.SubMenu title="Form">{structureFormMenu}</Menu.SubMenu>
+  );
 
-  const queueCallMenu = (
-    <Menu.Item key="moviesList" icon={<DashboardOutlined />}>
-      <Link to="/queue/call">Call</Link>
+  const masterCategoryMenu = (
+    <Menu.Item key="masterCategory" icon={<DashboardOutlined />}>
+      <Link to="/master/category">Category</Link>
       {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
     </Menu.Item>
   );
-
-  const queueDeferListMenu = (
-    <Menu.Item key="moviesList" icon={<DashboardOutlined />}>
-      <Link to="/master/movies">Defer</Link>
-      {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
-    </Menu.Item>
-  );
-
-  const queueActiveListMenu = (
-    <Menu.Item key="moviesList" icon={<DashboardOutlined />}>
-      <Link to="/master/movies">Active</Link>
-      {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
-    </Menu.Item>
-  );
-
-  const reportMenu = (
-    <Menu.SubMenu title="Report">{summaryListMenu}</Menu.SubMenu>
-  );
-
-  const queueMenu = (
-    <Menu.SubMenu title="Queue">
-      {queueCallMenu}
-      {queueDeferListMenu}
-      {queueActiveListMenu}
-    </Menu.SubMenu>
+  const masterMenu = (
+    <Menu.SubMenu title="Master">{masterCategoryMenu}</Menu.SubMenu>
   );
 
   const renderSider = () => {
-    return <>{homeMenu}</>;
+    return (
+      <>
+        {homeMenu}
+        {formMenu}
+        {masterMenu}
+      </>
+    );
   };
 
   const renderMenu = () => {
