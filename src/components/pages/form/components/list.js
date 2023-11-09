@@ -1,18 +1,18 @@
 import { Card, Col, List, Pagination, Table, Input, Row, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { colorTheme } from "../../../../../definitions";
-import { isSuccesfullRequest } from "../../../../../rest-data-provider/briqueTms/utils";
+import { colorTheme } from "../../../../definitions";
+import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
-import { useGet } from "../../../../../hooks/data/useGet";
+import { useGet } from "../../../../hooks/data/useGet";
 
-export const ListStructureFormComponent = () => {
+export const ListFormComponent = () => {
   const [formStructureList, setFormStructureList] = useState([]);
   const navigate = useNavigate();
 
-  const { state: stateFormStructureList, fire: getFormStructureList } = useGet({
+  const { state: stateFormStructureList, fire: getFormList } = useGet({
     dataProviderName: "briqueTms",
-    resource: "form/structure-list",
+    resource: "form/list",
     handleResult: () => {
       if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
         setFormStructureList([...stateFormStructureList?.data?.forms]);
@@ -65,9 +65,9 @@ export const ListStructureFormComponent = () => {
   ];
 
   useEffect(() => {
-    getFormStructureList({
+    getFormList({
       dataProviderName: "briqueTms",
-      resource: "form/structure-list",
+      resource: "form/list",
       handleResult: () => {
         if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
           setFormStructureList([...stateFormStructureList?.data?.forms]);
@@ -79,7 +79,7 @@ export const ListStructureFormComponent = () => {
     <>
       <Row>
         <Col span={18}>
-          <h2 style={{ marginBottom: "25px" }}>Form Structure List</h2>
+          <h2 style={{ marginBottom: "25px" }}>Form</h2>
         </Col>
         <Col span={6} style={{ textAlign: "end" }}>
           <Button

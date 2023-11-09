@@ -20,14 +20,11 @@ export const Sider = () => {
     </Menu.Item>
   );
 
-  const structureFormMenu = (
-    <Menu.Item key="structureForm" icon={<DashboardOutlined />}>
-      <Link to="/form/structure">Structure</Link>
+  const formMenu = (
+    <Menu.Item key="formList" icon={<DashboardOutlined />}>
+      <Link to="/form/list">Form</Link>
       {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
     </Menu.Item>
-  );
-  const formMenu = (
-    <Menu.SubMenu title="Form">{structureFormMenu}</Menu.SubMenu>
   );
 
   const masterCategoryMenu = (
@@ -43,7 +40,6 @@ export const Sider = () => {
   const renderSider = () => {
     return (
       <>
-        {homeMenu}
         {formMenu}
         {masterMenu}
       </>
