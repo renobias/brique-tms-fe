@@ -30,6 +30,10 @@ export const colorTheme = {
         dark: colors.white1,
       },
     },
+    form: {
+      light: colors.white1,
+      dark: colors.blackLight,
+    },
     buttonPositive: {
       light: colors.blue1,
       dark: colors.blue1,

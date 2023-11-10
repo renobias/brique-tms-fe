@@ -48,6 +48,7 @@ export const ListFormComponent = () => {
         return (
           <Button
             onClick={() => {
+              navigate(`/form/edit?id=${record.id}`);
               // router.push({
               //   pathname: "/master/movies/edit",
               //   query: {

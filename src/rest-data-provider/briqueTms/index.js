@@ -1,11 +1,17 @@
 import queryString from "query-string";
 import { briqueTmsAxios } from "./utils";
+import { authProvider } from "../../authProvider";
 
 export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
   post: async ({ resource, variables, meta, query }) => {
+    const { token } = authProvider.getIdentity();
+
     const url = query
-      ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
-      : `${apiUrl}/${resource}`;
+      ? `${apiUrl}/${resource}/?${queryString.stringify({
+          ...query,
+          accessToken: token,
+        })}`
+      : `${apiUrl}/${resource}?accessToken=${token}`;
 
     const { headers, method } = meta ?? {};
     const requestMethod = method ?? "post";
@@ -26,9 +32,14 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
   },
 
   get: async ({ resource, meta, query }) => {
+    const { token } = authProvider.getIdentity();
+
     const url = query
-      ? `${apiUrl}/${resource}/?${queryString.stringify({ ...query })}`
-      : `${apiUrl}/${resource}`;
+      ? `${apiUrl}/${resource}/?${queryString.stringify({
+          ...query,
+          accessToken: token,
+        })}`
+      : `${apiUrl}/${resource}?accessToken=${token}`;
 
     console.log("url -> ", url);
 

@@ -7,6 +7,7 @@ export function useGet({
   dataProviderName,
   resource,
   variables,
+  query,
   meta,
   handleResult,
 }) {
@@ -23,10 +24,13 @@ export function useGet({
   async function fire({
     dataProviderName: dataProviderNameFire,
     resource: resourceFire,
+    query: queryFire,
     variables: variablesFire,
     meta: metaFire,
     handleResult: handleResultFire,
   }) {
+    console.log("variables -> ", variables);
+    console.log("meta -> ", meta);
     // async function fire() {
     try {
       setState({
@@ -38,6 +42,7 @@ export function useGet({
       ).get({
         resource: resourceFire || resource,
         variables: variablesFire || variables,
+        query: queryFire || query,
         meta: metaFire || meta,
       });
       // const { data, status, statusText } = await dataProvider(pickDataProvider(dataProviderName)).create({ resource, variables, meta });
