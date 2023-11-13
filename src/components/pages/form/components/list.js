@@ -23,8 +23,8 @@ export const ListFormComponent = () => {
   const columns = [
     {
       title: "No",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "number",
+      key: "number",
     },
     {
       title: "Name",
@@ -92,6 +92,7 @@ export const ListFormComponent = () => {
               backgroundColor: colorTheme.Background.buttonPositive["light"],
             }}
             onClick={() => {
+              navigate("/form/create");
               // router.push({
               //   pathname: "/master/movies/create",
               // });
@@ -116,6 +117,12 @@ export const ListFormComponent = () => {
         dataSource={formStructureList}
         columns={columns}
         loading={stateFormStructureList.isLoading}
+        pagination={{
+          pfullnameSize: 10, // Number of items per pfullname
+          total: formStructureList.length, // Total number of items
+          showSizeChanger: true, // Show option to change pfullname size
+          pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+        }}
       />
     </>
   );

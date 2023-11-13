@@ -4,7 +4,7 @@ import { useGet } from "../../../../hooks/data/useGet";
 import { usePost } from "../../../../hooks/data/usePost";
 import { useNotification } from "../../../../hooks/utility";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
-import { Button, Card, Collapse, Form, Image, Input } from "antd";
+import { Button, Card, Col, Collapse, Form, Image, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authProvider } from "../../../../authProvider";
@@ -146,118 +146,137 @@ export const EditFormComponent = () => {
         style: panelStyle,
         children: (
           <>
-            <Form.Item
-              label="Field Name"
-              name={`fieldName-${field?.fieldName}`}
-              rules={[
-                {
-                  required: true,
-                  message: "Please input title!",
-                },
-              ]}
-            >
-              <Input style={{ fontSize: "1.05rem" }} />
-            </Form.Item>
-            <Form.Item
-              label="Field Display Name"
-              name={`fieldDisplayName-${field?.fieldName}`}
-              rules={[{ required: true, message: "Please input description!" }]}
-            >
-              <Input style={{ fontSize: "1.05rem" }} />
-            </Form.Item>
-            <Form.Item
-              label="Mandatory"
-              name={`fieldIsMandatory-${field?.fieldName}`}
-              rules={[{ required: true, message: "Please input description!" }]}
-            >
-              <Input style={{ fontSize: "1.05rem" }} />
-            </Form.Item>
-            <Form.Item
-              label="Max Length"
-              name={`fieldMinLength-${field?.fieldName}`}
-              rules={[{ required: true, message: "Please input description!" }]}
-            >
-              <Input style={{ fontSize: "1.05rem" }} />
-            </Form.Item>
-            <Form.Item
-              label="Min Length"
-              name={`fieldMaxLength-${field?.fieldName}`}
-              rules={[{ required: true, message: "Please input description!" }]}
-            >
-              <Input style={{ fontSize: "1.05rem" }} />
-            </Form.Item>
-            <Card>
-              <h4 style={{ marginBottom: "5px" }}>Constraint</h4>
-              <Form.Item
-                label="Accept Alphabet"
-                name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-              <Form.Item
-                label="Accept Number"
-                name={`fieldConstraintAcceptNumber-${field?.fieldName}`}
-                rules={[
-                  { required: true, message: "Please input descriptio!" },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-              <Form.Item
-                label="Allowed Symbols"
-                name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-              <Form.Item
-                label="Format Currency"
-                name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-              <Form.Item
-                label="Selection Dynamic Fields"
-                name={`fieldConstraintSelectionDynamicFields-${field?.fieldName}`}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-              <Form.Item
-                label="Selection Fetch"
-                name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input title!",
-                  },
-                ]}
-              >
-                <Input style={{ fontSize: "1.05rem" }} />
-              </Form.Item>
-            </Card>
+            <Row gutter={30}>
+              <Col span={12}>
+                <Form.Item
+                  label="Field Name"
+                  name={`fieldName-${field?.fieldName}`}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input title!",
+                    },
+                  ]}
+                >
+                  <Input style={{ fontSize: "1.05rem" }} />
+                </Form.Item>
+                <Form.Item
+                  label="Field Display Name"
+                  name={`fieldDisplayName-${field?.fieldName}`}
+                  rules={[
+                    { required: true, message: "Please input description!" },
+                  ]}
+                >
+                  <Input style={{ fontSize: "1.05rem" }} />
+                </Form.Item>
+                <Form.Item
+                  label="Mandatory"
+                  name={`fieldIsMandatory-${field?.fieldName}`}
+                  rules={[
+                    { required: true, message: "Please input description!" },
+                  ]}
+                >
+                  <Input style={{ fontSize: "1.05rem" }} />
+                </Form.Item>
+                <Form.Item
+                  label="Max Length"
+                  name={`fieldMinLength-${field?.fieldName}`}
+                  rules={[
+                    { required: true, message: "Please input description!" },
+                  ]}
+                >
+                  <Input style={{ fontSize: "1.05rem" }} />
+                </Form.Item>
+                <Form.Item
+                  label="Min Length"
+                  name={`fieldMaxLength-${field?.fieldName}`}
+                  rules={[
+                    { required: true, message: "Please input description!" },
+                  ]}
+                >
+                  <Input style={{ fontSize: "1.05rem" }} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Card
+                  style={{
+                    height: "450px",
+                    overflow: "auto",
+                  }}
+                >
+                  <h4 style={{ marginBottom: "5px" }}>Constraint</h4>
+                  <Form.Item
+                    label="Accept Alphabet"
+                    name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Accept Number"
+                    name={`fieldConstraintAcceptNumber-${field?.fieldName}`}
+                    rules={[
+                      { required: true, message: "Please input descriptio!" },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Allowed Symbols"
+                    name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Format Currency"
+                    name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Selection Dynamic Fields"
+                    name={`fieldConstraintSelectionDynamicFields-${field?.fieldName}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                  <Form.Item
+                    label="Selection Fetch"
+                    name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input title!",
+                      },
+                    ]}
+                  >
+                    <Input style={{ fontSize: "1.05rem" }} />
+                  </Form.Item>
+                </Card>
+              </Col>
+            </Row>
           </>
         ),
       };

@@ -23,8 +23,8 @@ export const ListCategoryMasterComponent = () => {
   const columns = [
     {
       title: "No",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "number",
+      key: "number",
     },
     {
       title: "Name",

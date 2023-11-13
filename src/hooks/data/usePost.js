@@ -35,7 +35,7 @@ export function usePost({
       });
       const { data, status, statusText } = await dataProvider(
         pickDataProvider(dataProviderNameFire || dataProviderName)
-      ).create({
+      ).post({
         resource: resourceFire || resource,
         variables: variablesFire || variables,
         meta: metaFire || meta,

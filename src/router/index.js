@@ -5,6 +5,7 @@ import ListCategoryMasterPage from "../pages/master/category/list";
 import React from "react";
 import ListFormPage from "../pages/form/list";
 import EditFormPage from "../pages/form/edit";
+import CreateFormPage from "../pages/form/create";
 
 export const Router = () => {
   const element = useRoutes([
@@ -27,6 +28,10 @@ export const Router = () => {
     {
       path: "/form/edit",
       element: <EditFormPage />,
+    },
+    {
+      path: "/form/create",
+      element: <CreateFormPage />,
     },
     {
       path: "/master/category",
