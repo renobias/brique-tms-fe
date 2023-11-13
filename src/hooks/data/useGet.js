@@ -29,8 +29,6 @@ export function useGet({
     meta: metaFire,
     handleResult: handleResultFire,
   }) {
-    console.log("variables -> ", variables);
-    console.log("meta -> ", meta);
     // async function fire() {
     try {
       setState({

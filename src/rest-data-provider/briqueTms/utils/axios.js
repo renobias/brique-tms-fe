@@ -11,13 +11,12 @@ briqueTmsAxios.interceptors.response.use(
       const customError = {
         ...error,
         statusCode:
-          error.response.errorCode ||
+          error.response.data.errorCode ||
           error.response.status ||
           error.response.statusCode ||
           "unidentified",
         message:
-          error.response.errorMssg ||
-          error.response.data.error ||
+          error.response.data.errorMssg ||
           error.response.statusText ||
           error.response.statusMessage ||
           error.response.message ||
@@ -25,6 +24,7 @@ briqueTmsAxios.interceptors.response.use(
           "Terjadi kesalahan pada server",
         gnrMessage: "Terjadi kesalahan pada server",
       };
+      console.log("custom error -> ", customError)
       return Promise.reject(customError);
     } else if (error.request) {
       const customError = {

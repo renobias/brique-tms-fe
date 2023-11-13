@@ -4,14 +4,14 @@ import { authProvider } from "../../authProvider";
 
 export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
   post: async ({ resource, variables, meta, query }) => {
-    const { token } = authProvider.getIdentity();
+    const identity = authProvider.getIdentity();
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
           ...query,
-          accessToken: token,
+          accessToken: identity?.token,
         })}`
-      : `${apiUrl}/${resource}?accessToken=${token}`;
+      : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     const { headers, method } = meta ?? {};
     const requestMethod = method ?? "post";
@@ -32,14 +32,14 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
   },
 
   get: async ({ resource, meta, query }) => {
-    const { token } = authProvider.getIdentity();
+    const identity = authProvider.getIdentity();
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
           ...query,
-          accessToken: token,
+          accessToken: identity?.token,
         })}`
-      : `${apiUrl}/${resource}?accessToken=${token}`;
+      : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     console.log("url -> ", url);
 
