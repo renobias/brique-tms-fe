@@ -4,12 +4,23 @@ import { useGet } from "../../../../hooks/data/useGet";
 import { usePost } from "../../../../hooks/data/usePost";
 import { useNotification } from "../../../../hooks/utility";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
-import { Button, Card, Col, Collapse, Form, Image, Input, Row } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Collapse,
+  Form,
+  Image,
+  Input,
+  Row,
+  Select,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authProvider } from "../../../../authProvider";
 import { encryptContent } from "../../../../crypto";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, CloseOutlined } from "@ant-design/icons";
+const { Option } = Select;
 
 const panelStyle = {
   marginBottom: 15,
@@ -22,6 +33,7 @@ export const EditFormComponent = () => {
   const { clientKey, sharedKey } = authProvider.getIdentity();
   const location = useLocation();
   const formId = new URLSearchParams(location.search).get("id");
+  const [rerender, setRerender] = useState(false);
 
   const { openNotification } = useNotification();
   //   const router = useRouter();
@@ -33,15 +45,16 @@ export const EditFormComponent = () => {
   const [formEditImage, setFormEditImage] = useState({
     image: null,
   });
+  const [categoriesOptions, setCategoriesOptions] = useState([]);
 
-  const { fire: createForm, state: stateCreateForm } = usePost({
+  const { fire: editForm, state: stateEditForm } = usePost({
     dataProviderName: "briqueTms",
     resource: "form/structure",
     handleResult: () => {
-      if (isSuccesfullRequest(stateCreateForm.statusCode)) {
+      if (isSuccesfullRequest(stateEditForm.statusCode)) {
         openNotification({
           title: "Success Edit Form",
-          description: `${stateCreateForm?.data?.title} successfully edit`,
+          description: `${stateEditForm?.data?.title} successfully edit`,
           type: "success",
         });
         setTimeout(() => {
@@ -77,6 +90,17 @@ export const EditFormComponent = () => {
     },
   });
 
+  const { state: stateCategories, fire: getCategories } = useGet({
+    dataProviderName: "briqueTms",
+    resource: "form/categories",
+    handleResult: () => {
+      if (isSuccesfullRequest(stateCategories?.statusCode)) {
+        console.log("success");
+        setCategoriesOptions([...stateCategories?.data?.categories]);
+      }
+    },
+  });
+
   useEffect(() => {
     getFormStructure({
       dataProviderName: "briqueTms",
@@ -85,7 +109,26 @@ export const EditFormComponent = () => {
       handleResult: () => {
         if (isSuccesfullRequest(stateFormStructure.statusCode)) {
           // setFormStructure({ ...stateFormStructure?.data });
-          formEdit.setFieldsValue({ ...stateFormStructure?.data });
+          formEdit.setFieldsValue({
+            ...stateFormStructure?.data,
+            category:
+              stateFormStructure?.data?.formCategoryId == 1
+                ? "financial"
+                : "nonFinancial",
+          });
+        }
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    getCategories({
+      dataProviderName: "briqueTms",
+      resource: "form/categories",
+      handleResult: () => {
+        if (isSuccesfullRequest(stateCategories?.statusCode)) {
+          console.log("success");
+          setCategoriesOptions([...stateCategories?.data?.categories]);
         }
       },
     });
@@ -118,6 +161,10 @@ export const EditFormComponent = () => {
 
   console.log("fields -> ", formEdit.getFieldsValue());
 
+  const getRerender = () => {
+    setRerender(!rerender);
+  };
+
   const getFieldItems = (data, panelStyle) => {
     return data?.map((field) => {
       formEdit.setFieldsValue({
@@ -144,6 +191,209 @@ export const EditFormComponent = () => {
         key: `${field?.fieldId}`,
         label: `${field?.fieldDisplayName}`,
         style: panelStyle,
+        // children: (
+        //   <>
+        //     <Form.List name="formFields">
+        //       {(fields, { add, remove }) => (
+        //         <div
+        //           style={{
+        //             display: "flex",
+        //             rowGap: 16,
+        //             flexDirection: "column",
+        //           }}
+        //         >
+        //           {fields.map((field) => (
+        //             <Card
+        //               size="small"
+        //               title={`Field ${field.name + 1}`}
+        //               key={field.key}
+        //               extra={
+        //                 <CloseOutlined
+        //                   onClick={() => {
+        //                     remove(field.name);
+        //                   }}
+        //                 />
+        //               }
+        //               bodyStyle={{ backgroundColor: "#f5f5f5" }}
+        //             >
+        //               <Row gutter={20}>
+        //                 <Col span={12}>
+        //                   <Form.Item
+        //                     label="Field Name"
+        //                     name={[field.name, "fieldName"]}
+        //                     rules={[
+        //                       {
+        //                         required: true,
+        //                         message: "Please input Field Name!",
+        //                       },
+        //                     ]}
+        //                   >
+        //                     <Input />
+        //                   </Form.Item>
+
+        //                   <Form.Item
+        //                     label="Field Display Name"
+        //                     name={[field.name, "fieldDisplayName"]}
+        //                     rules={[
+        //                       {
+        //                         required: true,
+        //                         message: "Please input Field Display Name!",
+        //                       },
+        //                     ]}
+        //                   >
+        //                     <Input />
+        //                   </Form.Item>
+
+        //                   <Form.Item
+        //                     label="Mandatory"
+        //                     name={[field.name, "fieldMandatory"]}
+        //                     rules={[
+        //                       {
+        //                         required: true,
+        //                         message: "Please input Field Mandatory!",
+        //                       },
+        //                     ]}
+        //                   >
+        //                     <Input />
+        //                   </Form.Item>
+
+        //                   <Form.Item
+        //                     label="Max Length"
+        //                     name={[field.name, "fieldMaxLength"]}
+        //                     rules={[
+        //                       {
+        //                         required: true,
+        //                         message: "Please input Field Max Length!",
+        //                       },
+        //                     ]}
+        //                   >
+        //                     <Input />
+        //                   </Form.Item>
+
+        //                   <Form.Item
+        //                     label="Min Length"
+        //                     name={[field.name, "fieldMinLength"]}
+        //                     rules={[
+        //                       {
+        //                         required: true,
+        //                         message: "Please input Field Min Length!",
+        //                       },
+        //                     ]}
+        //                   >
+        //                     <Input />
+        //                   </Form.Item>
+        //                 </Col>
+        //                 <Col span={12}>
+        //                   <Card>
+        //                     <h4>Constraint</h4>
+        //                     <Form.Item
+        //                       label="Accept Alphabet"
+        //                       // name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
+        //                       name={[
+        //                         field.name,
+        //                         `fieldConstraintAcceptAlphabet`,
+        //                       ]}
+        //                       rules={[
+        //                         {
+        //                           required: true,
+        //                           message:
+        //                             "Please input Field Accept Alphabet Constraint!",
+        //                         },
+        //                       ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                     <Form.Item
+        //                       label="Accept Number"
+        //                       name={[field.name, `fieldConstraintAcceptNumber`]}
+        //                       rules={[
+        //                         {
+        //                           required: true,
+        //                           message:
+        //                             "Please input Field Accept Number Constraint!",
+        //                         },
+        //                       ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                     <Form.Item
+        //                       label="Allowed Symbols"
+        //                       name={[
+        //                         field.name,
+        //                         `fieldConstraintAllowedSymbols`,
+        //                       ]}
+        //                       // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+        //                       // rules={[
+        //                       //   {
+        //                       //     required: true,
+        //                       //     message: "Please input title!",
+        //                       //   },
+        //                       // ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                     <Form.Item
+        //                       label="Format Currency"
+        //                       name={[
+        //                         field.name,
+        //                         `fieldConstraintFormatCurrency`,
+        //                       ]}
+        //                       // name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
+        //                       // rules={[
+        //                       //   {
+        //                       //     required: true,
+        //                       //     message: "Please input title!",
+        //                       //   },
+        //                       // ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                     <Form.Item
+        //                       label="Selection Dynamic Fields"
+        //                       name={[
+        //                         field.name,
+        //                         `fieldConstraintSelectionDynamicFields`,
+        //                       ]}
+        //                       // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+        //                       // rules={[
+        //                       //   {
+        //                       //     required: true,
+        //                       //     message: "Please input title!",
+        //                       //   },
+        //                       // ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                     <Form.Item
+        //                       label="Selection Fetch"
+        //                       name={[
+        //                         field.name,
+        //                         `fieldConstraintSelectionFetch`,
+        //                       ]}
+        //                       // name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
+        //                       // rules={[
+        //                       //   {
+        //                       //     required: true,
+        //                       //     message: "Please input title!",
+        //                       //   },
+        //                       // ]}
+        //                     >
+        //                       <Input style={{ fontSize: "1.05rem" }} />
+        //                     </Form.Item>
+        //                   </Card>
+        //                 </Col>
+        //               </Row>
+        //             </Card>
+        //           ))}
+
+        //           <Button type="dashed" onClick={() => add()} block>
+        //             + Add Field
+        //           </Button>
+        //         </div>
+        //       )}
+        //     </Form.List>
+        //   </>
+        // ),
         children: (
           <>
             <Row gutter={30}>
@@ -282,21 +532,44 @@ export const EditFormComponent = () => {
       };
     });
   };
-
   console.log("form fields ->", formEdit.getFieldsValue());
+
+  const onCategoryChange = (value) => {
+    console.log("value -> ", value);
+    switch (value) {
+      case "financial":
+        formEdit.setFieldsValue({ category: value });
+        getRerender();
+        break;
+      case "nonFinancial":
+        formEdit.setFieldsValue({ category: value });
+        getRerender();
+        break;
+      case "other":
+        formEdit.setFieldsValue({ category: value });
+        getRerender();
+        break;
+      default:
+    }
+  };
+
+  const onCategoryClear = () => {
+    formEdit.setFieldValue({ category: null });
+    getRerender();
+  };
 
   return (
     <>
       <h2 style={{ marginBottom: "20px" }}>Edit Form</h2>
       <LoadingTransparentPage
-        isLoading={stateFormStructure.isLoading || stateCreateForm.isLoading}
+        isLoading={stateFormStructure.isLoading || stateEditForm.isLoading}
       >
         <Form
           layout="vertical"
           name="basic"
           form={formEdit}
           //   initialValues={{ remember: true }}
-          // onFinish={onFinish}
+          onFinish={onFinish}
           // onFinishFailed={onFinishFailed}
           autoComplete="off"
           style={formStyle}
@@ -305,41 +578,282 @@ export const EditFormComponent = () => {
           }}
         >
           <Form.Item
-            label="Form Name"
-            name="formName"
-            rules={[
-              {
-                required: true,
-                message: "Please input title!",
-              },
-            ]}
+            label="Category"
+            name="category"
+            // initialValue="user123!"
+            rules={[{ required: true, message: "Please input category!" }]}
           >
-            <Input
-              style={{ fontSize: "1.05rem" }}
-              onChange={() => {
-                console.log("form fields -> ", formEdit.getFieldsValue());
-              }}
-            />
+            <Select
+              placeholder="-- Select Categories --"
+              onChange={onCategoryChange}
+              onClear={onCategoryClear}
+              // defaultValue={}
+              allowClear
+            >
+              {categoriesOptions.map((category) => {
+                return (
+                  <Option value={category?.name}>
+                    {category?.displayName}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
 
-          <Form.Item
-            label="Form Display Name"
-            name="formDisplayName"
-            rules={[{ required: true, message: "Please input description!" }]}
-          >
-            <Input style={{ fontSize: "1.05rem" }} />
-          </Form.Item>
+          {formEdit.getFieldValue("category") && (
+            <>
+              <Form.Item
+                label="Form Name"
+                name="formName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input title!",
+                  },
+                ]}
+              >
+                <Input
+                  style={{ fontSize: "1.05rem" }}
+                  onChange={() => {
+                    console.log("form fields -> ", formEdit.getFieldsValue());
+                  }}
+                />
+              </Form.Item>
 
-          <Collapse
-            bordered={false}
-            expandIcon={({ isActive }) => (
-              <CaretRightOutlined rotate={isActive ? 90 : 0} />
-            )}
-            style={{
-              background: "white",
-            }}
-            items={getFieldItems(stateFormStructure?.data?.fields, panelStyle)}
-          />
+              <Form.Item
+                label="Form Display Name"
+                name="formDisplayName"
+                rules={[
+                  { required: true, message: "Please input description!" },
+                ]}
+              >
+                <Input style={{ fontSize: "1.05rem" }} />
+              </Form.Item>
+
+              {/* <Collapse
+                bordered={false}
+                expandIcon={({ isActive }) => (
+                  <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                )}
+                style={{
+                  background: "white",
+                }}
+                items={getFieldItems(
+                  stateFormStructure?.data?.fields,
+                  panelStyle
+                )}
+              /> */}
+
+              <Form.List name="fields">
+                {(fields, { add, remove }) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      rowGap: 16,
+                      flexDirection: "column",
+                    }}
+                  >
+                    {fields.map((field) => (
+                      <Card
+                        size="small"
+                        title={`Field ${field.name + 1}`}
+                        key={field.key}
+                        extra={
+                          <CloseOutlined
+                            onClick={() => {
+                              remove(field.name);
+                            }}
+                          />
+                        }
+                        bodyStyle={{ backgroundColor: "#f5f5f5" }}
+                      >
+                        <Row gutter={20}>
+                          <Col span={12}>
+                            <Form.Item
+                              label="Field Name"
+                              name={[field.name, "fieldName"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Name!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Field Display Name"
+                              name={[field.name, "fieldDisplayName"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Display Name!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Mandatory"
+                              name={[field.name, "fieldIsMandatory"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Mandatory!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Max Length"
+                              name={[field.name, "fieldMaxLength"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Max Length!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Min Length"
+                              name={[field.name, "fieldMinLength"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Min Length!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                          </Col>
+                          <Col span={12}>
+                            <Card>
+                              <h4>Constraint</h4>
+                              <Form.Item
+                                label="Accept Alphabet"
+                                // name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `acceptAlphabet`,
+                                ]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Please input Field Accept Alphabet Constraint!",
+                                  },
+                                ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Accept Number"
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `acceptNumber`,
+                                ]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Please input Field Accept Number Constraint!",
+                                  },
+                                ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Allowed Symbols"
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `allowedSymbols`,
+                                ]}
+                                // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //     message: "Please input title!",
+                                //   },
+                                // ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Format Currency"
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `formatCurrency`,
+                                ]}
+                                // name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //     message: "Please input title!",
+                                //   },
+                                // ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Selection Dynamic Fields"
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `selectionDynamicFields`,
+                                ]}
+                                // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //     message: "Please input title!",
+                                //   },
+                                // ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Selection Fetch"
+                                name={[
+                                  field.name,
+                                  "constraint",
+                                  `selectionFetch`,
+                                ]}
+                                // name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //     message: "Please input title!",
+                                //   },
+                                // ]}
+                              >
+                                <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                            </Card>
+                          </Col>
+                        </Row>
+                      </Card>
+                    ))}
+
+                    <Button type="dashed" onClick={() => add()} block>
+                      + Add Field
+                    </Button>
+                  </div>
+                )}
+              </Form.List>
+            </>
+          )}
 
           <Form.Item style={{ textAlign: "center" }}>
             <Button
@@ -347,7 +861,7 @@ export const EditFormComponent = () => {
               size="large"
               shape="round"
               htmlType="submit"
-              loading={stateCreateForm.isLoading}
+              loading={stateEditForm.isLoading}
               style={{
                 backgroundColor: colorTheme.Background.buttonPositive["light"],
               }}

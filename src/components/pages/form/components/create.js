@@ -272,6 +272,9 @@ export const CreateFormComponent = () => {
           initialValues={{
             fields: [],
           }}
+          onValuesChange={() => {
+            console.log("values -> ", formCreate.getFieldsValue());
+          }}
         >
           <Form.Item
             label="Category"
