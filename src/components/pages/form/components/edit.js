@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { authProvider } from "../../../../authProvider";
 import { encryptContent } from "../../../../crypto";
 import { CaretRightOutlined, CloseOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
 const { Option } = Select;
 
 const panelStyle = {
@@ -47,21 +48,14 @@ export const EditFormComponent = () => {
   });
   const [categoriesOptions, setCategoriesOptions] = useState([]);
 
-  const { fire: editForm, state: stateEditForm } = usePost({
+  const { state: editFormState, fire: editForm } = usePost({
     dataProviderName: "briqueTms",
     resource: "form/structure",
+    variables: "asdasdasd",
+    meta: { headers: { "Content-Type": "text/plain" } },
     handleResult: () => {
-      if (isSuccesfullRequest(stateEditForm.statusCode)) {
-        openNotification({
-          title: "Success Edit Form",
-          description: `${stateEditForm?.data?.title} successfully edit`,
-          type: "success",
-        });
-        setTimeout(() => {
-          navigate("/form/list", {
-            replace: true,
-          });
-        }, 2000);
+      if (isSuccesfullRequest(editFormState?.statusCode)) {
+        console.log("success");
       }
     },
   });
@@ -135,20 +129,94 @@ export const EditFormComponent = () => {
   }, []);
 
   const onFinish = async (values) => {
-    // createForm({
-    //   dataProviderName: "briqueTms",
-    //   resource: "form/structure",
-    //   variables: {
-    //     id,
-    //     StudioId: studioId,
-    //     title: values.title,
-    //     description: values.description,
-    //     director: values.director,
-    //     genre: values.genre,
-    //     image: formEditImage?.image?.split(",")[1],
-    //   },
-    // });
-    // await handleOnSubmit(values.email, values.password);
+    console.log("values -> ", values);
+    const fields = values?.formFields?.map((formField) => {
+      return {
+        name: formField?.fieldName,
+        displayName: formField?.fieldDisplayName,
+        fieldType: "text",
+        isMandatory: formField?.fieldMandatory,
+        minLength: formField?.fieldMinLength,
+        maxLength: formField?.fieldMaxLength,
+        orderNo: formField?.orderNo ?? 1,
+        createdTime: "2023-11-09 09:46:29.000000",
+        createdBy: "1",
+        notes: formField?.notes ?? null,
+        constraint: {
+          acceptAlphabet: formField?.fieldConstraintAcceptAlphabet,
+          acceptNumber: formField?.fieldConstraintAcceptNumber,
+          formatCurrency: formField?.fieldConstraintFormatCurrency,
+          allowedSymbols: formField?.fieldConstraintAllowedSymbols,
+          selectionDynamicFields:
+            formField?.fieldConstraintSelectionDynamicFields,
+          selectionFetch: formField?.fieldConstraintSelectionFetch,
+          createdTime: "2023-11-09 09:46:29.000000",
+          createdBy: "1",
+          notes: formField?.notes,
+        },
+      };
+    });
+
+    console.log("fields -> ", fields);
+
+    const payloadSend = {
+      isCreate: true,
+      data: {
+        formInfo: {
+          name: values?.formName,
+          displayName: values?.formDisplayName,
+          formCategoryId: values?.category == "financial" ? 1 : 2,
+          orderNo: 1,
+          createdTime: "2023-11-09 09:46:29.000000",
+          createdBy: 1,
+          notes: values?.notes,
+        },
+        formFields: fields ? [...fields] : [],
+      },
+    };
+
+    const data = {
+      clientKey: identity?.clientKey,
+      sharedKey: identity?.sharedKey,
+      payload: { ...payloadSend },
+    };
+    console.log("payload send -> ", payloadSend);
+    Swal.fire({
+      title: "Creating form...",
+      html: "Please wait...",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    editForm({
+      dataProviderName: "briqueTms",
+      resource: "form/structure",
+      variables: encryptContent(data),
+      meta: { headers: { "Content-Type": "text/plain" } },
+      handleResult: () => {
+        if (isSuccesfullRequest(editFormState?.statusCode)) {
+          console.log("success");
+          Swal.fire({
+            title: "Success!",
+            text: "successfully edit form!",
+            icon: "success",
+          }).then((result) => {
+            Swal.hideLoading();
+            navigate("/form/list", { replace: true });
+          });
+        } else {
+          Swal.fire({
+            title: "Oops something went wrong!",
+            text: "failed to edit form!",
+            icon: "error",
+          }).then((result) => {
+            Swal.hideLoading();
+          });
+        }
+      },
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -864,9 +932,10 @@ export const EditFormComponent = () => {
               loading={stateEditForm.isLoading}
               style={{
                 backgroundColor: colorTheme.Background.buttonPositive["light"],
+                marginTop: "20px",
               }}
             >
-              Edit Form
+              Edit
             </Button>
           </Form.Item>
         </Form>
