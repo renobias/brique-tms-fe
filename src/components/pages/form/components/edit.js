@@ -688,9 +688,6 @@ export const EditFormComponent = () => {
 
               <Form.List name="fields">
                 {(fields, { add, remove }) => {
-                  console.log("FIELDS -> ", fields);
-                  const fieldForm = formEdit.getFieldsValue();
-                  console.log("field form -> ", fieldForm);
                   return (
                     <div
                       style={{
@@ -702,16 +699,17 @@ export const EditFormComponent = () => {
                       {fields.map(
                         (field, index) => {
                           const fieldForm = formEdit.getFieldValue("fields");
-                          console.log("field formmmm -> ", fieldForm);
-                          console.log(
-                            "field form at -> ",
-                            fieldForm?.at(index)
-                          );
                           return (
                             !fieldForm?.at(index)?.isDelete && (
                               <Card
                                 size="small"
-                                title={`Field ${field.name + 1}`}
+                                title={
+                                  fieldForm?.at(index)?.fieldDisplayName
+                                    ? `${
+                                        fieldForm?.at(index)?.fieldDisplayName
+                                      } `
+                                    : `Field ${field.name + 1}`
+                                }
                                 key={field.key}
                                 extra={
                                   <CloseOutlined
@@ -724,8 +722,6 @@ export const EditFormComponent = () => {
                                       formEdit.setFieldsValue({
                                         ...fieldsLatest,
                                       });
-                                      // remove(field.name)
-                                      // getRerender();
                                     }}
                                   />
                                 }
