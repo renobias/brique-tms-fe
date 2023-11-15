@@ -31,10 +31,10 @@ const panelStyle = {
 };
 
 export const EditFormComponent = () => {
-  const { clientKey, sharedKey } = authProvider.getIdentity();
   const location = useLocation();
   const formId = new URLSearchParams(location.search).get("id");
   const [rerender, setRerender] = useState(false);
+  const identity = authProvider.getIdentity();
 
   const { openNotification } = useNotification();
   //   const router = useRouter();
@@ -130,59 +130,33 @@ export const EditFormComponent = () => {
 
   const onFinish = async (values) => {
     console.log("values -> ", values);
-    const fields = values?.formFields?.map((formField) => {
-      return {
-        name: formField?.fieldName,
-        displayName: formField?.fieldDisplayName,
-        fieldType: "text",
-        isMandatory: formField?.fieldMandatory,
-        minLength: formField?.fieldMinLength,
-        maxLength: formField?.fieldMaxLength,
-        orderNo: formField?.orderNo ?? 1,
-        createdTime: "2023-11-09 09:46:29.000000",
-        createdBy: "1",
-        notes: formField?.notes ?? null,
-        constraint: {
-          acceptAlphabet: formField?.fieldConstraintAcceptAlphabet,
-          acceptNumber: formField?.fieldConstraintAcceptNumber,
-          formatCurrency: formField?.fieldConstraintFormatCurrency,
-          allowedSymbols: formField?.fieldConstraintAllowedSymbols,
-          selectionDynamicFields:
-            formField?.fieldConstraintSelectionDynamicFields,
-          selectionFetch: formField?.fieldConstraintSelectionFetch,
-          createdTime: "2023-11-09 09:46:29.000000",
-          createdBy: "1",
-          notes: formField?.notes,
-        },
-      };
-    });
-
-    console.log("fields -> ", fields);
 
     const payloadSend = {
-      isCreate: true,
       data: {
         formInfo: {
+          id: formId,
           name: values?.formName,
           displayName: values?.formDisplayName,
           formCategoryId: values?.category == "financial" ? 1 : 2,
-          orderNo: 1,
-          createdTime: "2023-11-09 09:46:29.000000",
-          createdBy: 1,
-          notes: values?.notes,
+          orderNo: "1",
+          notes: "",
         },
-        formFields: fields ? [...fields] : [],
+        formFields: [...values?.fields],
       },
     };
+
+    console.log("payload send -> ", payloadSend);
 
     const data = {
       clientKey: identity?.clientKey,
       sharedKey: identity?.sharedKey,
-      payload: { ...payloadSend },
+      payload: {
+        ...payloadSend,
+      },
     };
     console.log("payload send -> ", payloadSend);
     Swal.fire({
-      title: "Creating form...",
+      title: "Editing form...",
       html: "Please wait...",
       allowEscapeKey: false,
       allowOutsideClick: false,
@@ -630,7 +604,7 @@ export const EditFormComponent = () => {
     <>
       <h2 style={{ marginBottom: "20px" }}>Edit Form</h2>
       <LoadingTransparentPage
-        isLoading={stateFormStructure.isLoading || stateEditForm.isLoading}
+        isLoading={stateFormStructure.isLoading || editFormState.isLoading}
       >
         <Form
           layout="vertical"
@@ -929,7 +903,7 @@ export const EditFormComponent = () => {
               size="large"
               shape="round"
               htmlType="submit"
-              loading={stateEditForm.isLoading}
+              loading={editFormState.isLoading}
               style={{
                 backgroundColor: colorTheme.Background.buttonPositive["light"],
                 marginTop: "20px",
