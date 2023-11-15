@@ -708,7 +708,7 @@ export const EditFormComponent = () => {
                                     ? `${
                                         fieldForm?.at(index)?.fieldDisplayName
                                       } `
-                                    : `Field ${field.name + 1}`
+                                    : "New Field"
                                 }
                                 key={field.key}
                                 extra={
@@ -716,12 +716,21 @@ export const EditFormComponent = () => {
                                     onClick={() => {
                                       const fieldsLatest =
                                         formEdit.getFieldsValue();
-                                      fieldsLatest.fields[
-                                        index
-                                      ].isDelete = true;
-                                      formEdit.setFieldsValue({
-                                        ...fieldsLatest,
-                                      });
+                                      if (fieldsLatest?.fields[index]) {
+                                        fieldsLatest.fields[
+                                          index
+                                        ].isDelete = true;
+                                        formEdit.setFieldsValue({
+                                          ...fieldsLatest,
+                                        });
+                                      } else {
+                                        remove(field.name);
+                                      }
+                                      console.log(
+                                        "form value  -> ",
+                                        formEdit.getFieldsValue()
+                                      );
+                                      console.log("fields -> ", fields);
                                     }}
                                   />
                                 }
@@ -797,6 +806,45 @@ export const EditFormComponent = () => {
                                     >
                                       <Input />
                                     </Form.Item>
+
+                                    {/* <Form.Item
+                                      label="Field Notes"
+                                      name={[field.name, "fieldNotes"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Please input Field Notes!",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                      label="Field Order Number"
+                                      name={[field.name, "filterOrderNo"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Please input Field Notes!",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                      label="Field Type"
+                                      name={[field.name, "fieldType"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Please input Field Type!",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item> */}
                                   </Col>
                                   <Col span={12}>
                                     <Card>
@@ -918,6 +966,21 @@ export const EditFormComponent = () => {
                                       </Form.Item>
                                     </Card>
                                   </Col>
+                                  <Form.Item
+                                    label="Form structure Id"
+                                    name={[field.name, "formStructureId"]}
+                                    initialValue={formId}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message:
+                                          "Please input Form Structure Id!",
+                                      },
+                                    ]}
+                                    style={{ display: "none" }}
+                                  >
+                                    <Input />
+                                  </Form.Item>
                                 </Row>
                               </Card>
                             )
