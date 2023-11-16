@@ -61,6 +61,20 @@ export const EditFormComponent = () => {
       value: false,
     },
   ]);
+  const [fieldTypeOptions, setFieldTypeOptions] = useState([
+    {
+      id: 1,
+      name: "text",
+      displayName: "Text",
+      value: "text",
+    },
+    {
+      id: 2,
+      name: "selection",
+      displayName: "Selection",
+      value: "selection",
+    },
+  ]);
 
   const { state: editFormState, fire: editForm } = usePost({
     dataProviderName: "briqueTms",
@@ -151,12 +165,12 @@ export const EditFormComponent = () => {
         isDelete: formField?.isDelete,
         name: formField?.fieldName,
         displayName: formField?.fieldDisplayName,
-        fieldType: "text",
+        fieldType: formField?.fieldType,
         isMandatory: formField?.fieldIsMandatory,
         minLength: formField?.fieldMinLength,
         maxLength: formField?.fieldMaxLength,
         orderNo: formField?.fieldOrderNo ?? 1,
-        notes: formField?.notes ?? null,
+        notes: formField?.fieldNotes ?? "",
         createdTime: "2023-11-09 09:46:29.000000",
         createdBy: identity?.id,
         constraint: {
@@ -830,6 +844,20 @@ export const EditFormComponent = () => {
                                     </Form.Item>
 
                                     <Form.Item
+                                      label="Min Length"
+                                      name={[field.name, "fieldMinLength"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message:
+                                            "Please input Field Min Length!",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
                                       label="Max Length"
                                       name={[field.name, "fieldMaxLength"]}
                                       rules={[
@@ -844,20 +872,6 @@ export const EditFormComponent = () => {
                                     </Form.Item>
 
                                     <Form.Item
-                                      label="Min Length"
-                                      name={[field.name, "fieldMinLength"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Please input Field Min Length!",
-                                        },
-                                      ]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
-
-                                    {/* <Form.Item
                                       label="Field Notes"
                                       name={[field.name, "fieldNotes"]}
                                       rules={[
@@ -870,7 +884,7 @@ export const EditFormComponent = () => {
                                       <Input />
                                     </Form.Item>
 
-                                    <Form.Item
+                                    {/* <Form.Item
                                       label="Field Order Number"
                                       name={[field.name, "filterOrderNo"]}
                                       rules={[
@@ -881,11 +895,12 @@ export const EditFormComponent = () => {
                                       ]}
                                     >
                                       <Input />
-                                    </Form.Item>
+                                    </Form.Item> */}
 
                                     <Form.Item
                                       label="Field Type"
                                       name={[field.name, "fieldType"]}
+                                      // initialValue="user123!"
                                       rules={[
                                         {
                                           required: true,
@@ -893,8 +908,21 @@ export const EditFormComponent = () => {
                                         },
                                       ]}
                                     >
-                                      <Input />
-                                    </Form.Item> */}
+                                      <Select
+                                        placeholder="-- Select --"
+                                        // onChange={onCategoryChange}
+                                        // onClear={onCategoryClear}
+                                        // defaultValue={}
+                                      >
+                                        {fieldTypeOptions.map((select) => {
+                                          return (
+                                            <Option value={select?.value}>
+                                              {select?.displayName}
+                                            </Option>
+                                          );
+                                        })}
+                                      </Select>
+                                    </Form.Item>
                                   </Col>
                                   <Col span={12}>
                                     <Card>

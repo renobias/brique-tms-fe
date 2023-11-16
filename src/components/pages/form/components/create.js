@@ -55,6 +55,20 @@ export const CreateFormComponent = () => {
       value: false,
     },
   ]);
+  const [fieldTypeOptions, setFieldTypeOptions] = useState([
+    {
+      id: 1,
+      name: "text",
+      displayName: "Text",
+      value: "text",
+    },
+    {
+      id: 2,
+      name: "selection",
+      displayName: "Selection",
+      value: "selection",
+    },
+  ]);
   const [rerender, setRerender] = useState(false);
 
   const { state: stateCategories, fire: getCategories } = useGet({
@@ -170,14 +184,14 @@ export const CreateFormComponent = () => {
       return {
         name: formField?.fieldName,
         displayName: formField?.fieldDisplayName,
-        fieldType: "text",
+        fieldType: formField?.fieldType,
         isMandatory: formField?.fieldMandatory,
         minLength: formField?.fieldMinLength,
         maxLength: formField?.fieldMaxLength,
         orderNo: formField?.orderNo ?? 1,
         createdTime: "2023-11-09 09:46:29.000000",
         createdBy: "1",
-        notes: formField?.notes ?? null,
+        notes: formField?.fieldNotes ?? "null",
         constraint: {
           acceptAlphabet: formField?.fieldConstraintAcceptAlphabet,
           acceptNumber: formField?.fieldConstraintAcceptNumber,
@@ -419,6 +433,19 @@ export const CreateFormComponent = () => {
                             </Form.Item>
 
                             <Form.Item
+                              label="Min Length"
+                              name={[field.name, "fieldMinLength"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Min Length!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
                               label="Max Length"
                               name={[field.name, "fieldMaxLength"]}
                               rules={[
@@ -432,16 +459,56 @@ export const CreateFormComponent = () => {
                             </Form.Item>
 
                             <Form.Item
-                              label="Min Length"
-                              name={[field.name, "fieldMinLength"]}
+                              label="Field Notes"
+                              name={[field.name, "fieldNotes"]}
                               rules={[
                                 {
                                   required: true,
-                                  message: "Please input Field Min Length!",
+                                  message: "Please input Field Notes!",
                                 },
                               ]}
                             >
                               <Input />
+                            </Form.Item>
+
+                            {/* <Form.Item
+                              label="Field Order Number"
+                              name={[field.name, "fieldOrderNo"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Notes!",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item> */}
+
+                            <Form.Item
+                              label="Field Type"
+                              name={[field.name, "fieldType"]}
+                              // initialValue="user123!"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input Field Type!",
+                                },
+                              ]}
+                            >
+                              <Select
+                                placeholder="-- Select --"
+                                // onChange={onCategoryChange}
+                                // onClear={onCategoryClear}
+                                // defaultValue={}
+                              >
+                                {fieldTypeOptions.map((select) => {
+                                  return (
+                                    <Option value={select?.value}>
+                                      {select?.displayName}
+                                    </Option>
+                                  );
+                                })}
+                              </Select>
                             </Form.Item>
                           </Col>
                           <Col span={12}>
