@@ -173,7 +173,7 @@ export const CreateFormComponent = () => {
             formField?.fieldConstraintSelectionDynamicFields,
           selectionFetch: formField?.fieldConstraintSelectionFetch,
           createdTime: "2023-11-09 09:46:29.000000",
-          createdBy: "1",
+          createdBy: identity?.id,
           notes: formField?.notes,
         },
       };

@@ -129,7 +129,27 @@ export const EditFormComponent = () => {
   }, []);
 
   const onFinish = async (values) => {
-    console.log("values -> ", values);
+    const fields = values?.fields?.map((formField) => {
+      return {
+        fieldId: formField?.fieldId,
+        isDelete: formField?.isDelete,
+        name: formField?.fieldName,
+        displayName: formField?.fieldDisplayName,
+        fieldType: "text",
+        isMandatory: formField?.fieldIsMandatory,
+        minLength: formField?.fieldMinLength,
+        maxLength: formField?.fieldMaxLength,
+        orderNo: formField?.fieldOrderNo ?? 1,
+        notes: formField?.notes ?? null,
+        createdTime: "2023-11-09 09:46:29.000000",
+        createdBy: identity?.id,
+        constraint: {
+          ...formField?.constraint,
+          createdTime: "2023-11-09 09:46:29.000000",
+          createdBy: identity?.id,
+        },
+      };
+    });
 
     const payloadSend = {
       data: {
@@ -139,9 +159,9 @@ export const EditFormComponent = () => {
           displayName: values?.formDisplayName,
           formCategoryId: values?.category == "financial" ? 1 : 2,
           orderNo: "1",
-          notes: "",
+          notes: values?.notes,
         },
-        formFields: [...values?.fields],
+        formFields: [...fields],
       },
     };
 
