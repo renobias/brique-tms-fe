@@ -41,6 +41,20 @@ export const CreateFormComponent = () => {
   const navigate = useNavigate();
 
   const [categoriesOptions, setCategoriesOptions] = useState([]);
+  const [selectOptions, setSelectOptions] = useState([
+    {
+      id: 1,
+      name: "yes",
+      displayName: "Yes",
+      value: true,
+    },
+    {
+      id: 2,
+      name: "no",
+      displayName: "No",
+      value: false,
+    },
+  ]);
   const [rerender, setRerender] = useState(false);
 
   const { state: stateCategories, fire: getCategories } = useGet({
@@ -380,6 +394,7 @@ export const CreateFormComponent = () => {
                             <Form.Item
                               label="Mandatory"
                               name={[field.name, "fieldMandatory"]}
+                              // initialValue="user123!"
                               rules={[
                                 {
                                   required: true,
@@ -387,7 +402,20 @@ export const CreateFormComponent = () => {
                                 },
                               ]}
                             >
-                              <Input />
+                              <Select
+                                placeholder="-- Select --"
+                                // onChange={onCategoryChange}
+                                // onClear={onCategoryClear}
+                                // defaultValue={}
+                              >
+                                {selectOptions.map((select) => {
+                                  return (
+                                    <Option value={select?.value}>
+                                      {select?.displayName}
+                                    </Option>
+                                  );
+                                })}
+                              </Select>
                             </Form.Item>
 
                             <Form.Item
@@ -421,11 +449,11 @@ export const CreateFormComponent = () => {
                               <h4>Constraint</h4>
                               <Form.Item
                                 label="Accept Alphabet"
-                                // name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
                                 name={[
                                   field.name,
-                                  `fieldConstraintAcceptAlphabet`,
+                                  "fieldConstraintAcceptAlphabet",
                                 ]}
+                                // initialValue="user123!"
                                 rules={[
                                   {
                                     required: true,
@@ -434,14 +462,28 @@ export const CreateFormComponent = () => {
                                   },
                                 ]}
                               >
-                                <Input style={{ fontSize: "1.05rem" }} />
+                                <Select
+                                  placeholder="-- Select --"
+                                  // onChange={onCategoryChange}
+                                  // onClear={onCategoryClear}
+                                  // defaultValue={}
+                                >
+                                  {selectOptions.map((select) => {
+                                    return (
+                                      <Option value={select?.value}>
+                                        {select?.displayName}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
                               </Form.Item>
                               <Form.Item
                                 label="Accept Number"
                                 name={[
                                   field.name,
-                                  `fieldConstraintAcceptNumber`,
+                                  "fieldConstraintAcceptNumber",
                                 ]}
+                                // initialValue="user123!"
                                 rules={[
                                   {
                                     required: true,
@@ -450,7 +492,20 @@ export const CreateFormComponent = () => {
                                   },
                                 ]}
                               >
-                                <Input style={{ fontSize: "1.05rem" }} />
+                                <Select
+                                  placeholder="-- Select --"
+                                  // onChange={onCategoryChange}
+                                  // onClear={onCategoryClear}
+                                  // defaultValue={}
+                                >
+                                  {selectOptions.map((select) => {
+                                    return (
+                                      <Option value={select?.value}>
+                                        {select?.displayName}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
                               </Form.Item>
                               <Form.Item
                                 label="Allowed Symbols"
