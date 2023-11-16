@@ -191,7 +191,7 @@ export const CreateFormComponent = () => {
         orderNo: formField?.orderNo ?? 1,
         createdTime: "2023-11-09 09:46:29.000000",
         createdBy: "1",
-        notes: formField?.fieldNotes ?? "null",
+        notes: formField?.fieldNotes ?? "",
         constraint: {
           acceptAlphabet: formField?.fieldConstraintAcceptAlphabet,
           acceptNumber: formField?.fieldConstraintAcceptNumber,
@@ -202,7 +202,7 @@ export const CreateFormComponent = () => {
           selectionFetch: formField?.fieldConstraintSelectionFetch,
           createdTime: "2023-11-09 09:46:29.000000",
           createdBy: identity?.id,
-          notes: formField?.notes,
+          notes: formField?.fieldConstraintNotes,
         },
       };
     });
@@ -637,6 +637,12 @@ export const CreateFormComponent = () => {
                                 // ]}
                               >
                                 <Input style={{ fontSize: "1.05rem" }} />
+                              </Form.Item>
+                              <Form.Item
+                                label="Notes"
+                                name={[field.name, "fieldConstraintNotes"]}
+                              >
+                                <Input />
                               </Form.Item>
                             </Card>
                           </Col>
