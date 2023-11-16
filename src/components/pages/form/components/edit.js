@@ -47,6 +47,20 @@ export const EditFormComponent = () => {
     image: null,
   });
   const [categoriesOptions, setCategoriesOptions] = useState([]);
+  const [selectOptions, setSelectOptions] = useState([
+    {
+      id: 1,
+      name: "yes",
+      displayName: "Yes",
+      value: true,
+    },
+    {
+      id: 2,
+      name: "no",
+      displayName: "No",
+      value: false,
+    },
+  ]);
 
   const { state: editFormState, fire: editForm } = usePost({
     dataProviderName: "briqueTms",
@@ -94,6 +108,8 @@ export const EditFormComponent = () => {
       }
     },
   });
+
+  console.log("categories options -> ", categoriesOptions);
 
   useEffect(() => {
     getFormStructure({
@@ -788,6 +804,7 @@ export const EditFormComponent = () => {
                                     <Form.Item
                                       label="Mandatory"
                                       name={[field.name, "fieldIsMandatory"]}
+                                      // initialValue="user123!"
                                       rules={[
                                         {
                                           required: true,
@@ -796,7 +813,20 @@ export const EditFormComponent = () => {
                                         },
                                       ]}
                                     >
-                                      <Input />
+                                      <Select
+                                        placeholder="-- Select --"
+                                        // onChange={onCategoryChange}
+                                        // onClear={onCategoryClear}
+                                        // defaultValue={}
+                                      >
+                                        {selectOptions.map((select) => {
+                                          return (
+                                            <Option value={select?.value}>
+                                              {select?.displayName}
+                                            </Option>
+                                          );
+                                        })}
+                                      </Select>
                                     </Form.Item>
 
                                     <Form.Item
@@ -871,12 +901,12 @@ export const EditFormComponent = () => {
                                       <h4>Constraint</h4>
                                       <Form.Item
                                         label="Accept Alphabet"
-                                        // name={`fieldConstraintAcceptAlphabet-${field?.fieldName}`}
                                         name={[
                                           field.name,
                                           "constraint",
                                           `acceptAlphabet`,
                                         ]}
+                                        // initialValue="user123!"
                                         rules={[
                                           {
                                             required: true,
@@ -885,9 +915,20 @@ export const EditFormComponent = () => {
                                           },
                                         ]}
                                       >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
+                                        <Select
+                                          placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                        >
+                                          {selectOptions.map((select) => {
+                                            return (
+                                              <Option value={select?.value}>
+                                                {select?.displayName}
+                                              </Option>
+                                            );
+                                          })}
+                                        </Select>
                                       </Form.Item>
                                       <Form.Item
                                         label="Accept Number"
@@ -896,6 +937,7 @@ export const EditFormComponent = () => {
                                           "constraint",
                                           `acceptNumber`,
                                         ]}
+                                        // initialValue="user123!"
                                         rules={[
                                           {
                                             required: true,
@@ -904,9 +946,20 @@ export const EditFormComponent = () => {
                                           },
                                         ]}
                                       >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
+                                        <Select
+                                          placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                        >
+                                          {selectOptions.map((select) => {
+                                            return (
+                                              <Option value={select?.value}>
+                                                {select?.displayName}
+                                              </Option>
+                                            );
+                                          })}
+                                        </Select>
                                       </Form.Item>
                                       <Form.Item
                                         label="Allowed Symbols"
