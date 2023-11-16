@@ -1016,17 +1016,22 @@ export const EditFormComponent = () => {
                                           "constraint",
                                           `formatCurrency`,
                                         ]}
-                                        // name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
-                                        // rules={[
-                                        //   {
-                                        //     required: true,
-                                        //     message: "Please input title!",
-                                        //   },
-                                        // ]}
+                                        // initialValue="user123!"
                                       >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
+                                        <Select
+                                          placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                        >
+                                          {selectOptions.map((select) => {
+                                            return (
+                                              <Option value={select?.value}>
+                                                {select?.displayName}
+                                              </Option>
+                                            );
+                                          })}
+                                        </Select>
                                       </Form.Item>
                                       <Form.Item
                                         label="Selection Dynamic Fields"
@@ -1035,17 +1040,22 @@ export const EditFormComponent = () => {
                                           "constraint",
                                           `selectionDynamicFields`,
                                         ]}
-                                        // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
-                                        // rules={[
-                                        //   {
-                                        //     required: true,
-                                        //     message: "Please input title!",
-                                        //   },
-                                        // ]}
+                                        // initialValue="user123!"
                                       >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
+                                        <Select
+                                          placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                        >
+                                          {selectOptions.map((select) => {
+                                            return (
+                                              <Option value={select?.value}>
+                                                {select?.displayName}
+                                              </Option>
+                                            );
+                                          })}
+                                        </Select>
                                       </Form.Item>
                                       <Form.Item
                                         label="Selection Fetch"
@@ -1054,17 +1064,22 @@ export const EditFormComponent = () => {
                                           "constraint",
                                           `selectionFetch`,
                                         ]}
-                                        // name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
-                                        // rules={[
-                                        //   {
-                                        //     required: true,
-                                        //     message: "Please input title!",
-                                        //   },
-                                        // ]}
+                                        // initialValue="user123!"
                                       >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
+                                        <Select
+                                          placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                        >
+                                          {selectOptions.map((select) => {
+                                            return (
+                                              <Option value={select?.value}>
+                                                {select?.displayName}
+                                              </Option>
+                                            );
+                                          })}
+                                        </Select>
                                       </Form.Item>
                                       <Form.Item
                                         label="Notes"
