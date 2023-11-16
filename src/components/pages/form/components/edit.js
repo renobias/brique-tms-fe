@@ -160,6 +160,7 @@ export const EditFormComponent = () => {
 
   const onFinish = async (values) => {
     const fields = values?.fields?.map((formField) => {
+      console.log("form field -> ", formField);
       return {
         fieldId: formField?.fieldId,
         isDelete: formField?.isDelete,
@@ -872,7 +873,7 @@ export const EditFormComponent = () => {
                                     </Form.Item>
 
                                     <Form.Item
-                                      label="Field Notes"
+                                      label="Notes"
                                       name={[field.name, "fieldNotes"]}
                                       rules={[
                                         {
@@ -1064,6 +1065,16 @@ export const EditFormComponent = () => {
                                         <Input
                                           style={{ fontSize: "1.05rem" }}
                                         />
+                                      </Form.Item>
+                                      <Form.Item
+                                        label="Notes"
+                                        name={[
+                                          field.name,
+                                          "constraint",
+                                          "notes",
+                                        ]}
+                                      >
+                                        <Input />
                                       </Form.Item>
                                     </Card>
                                   </Col>

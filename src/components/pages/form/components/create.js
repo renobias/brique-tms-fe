@@ -459,7 +459,7 @@ export const CreateFormComponent = () => {
                             </Form.Item>
 
                             <Form.Item
-                              label="Field Notes"
+                              label="Notes"
                               name={[field.name, "fieldNotes"]}
                               rules={[
                                 {
