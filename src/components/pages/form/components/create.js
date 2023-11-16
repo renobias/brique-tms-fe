@@ -594,49 +594,70 @@ export const CreateFormComponent = () => {
                                 label="Format Currency"
                                 name={[
                                   field.name,
-                                  `fieldConstraintFormatCurrency`,
+                                  "fieldConstraintFormatCurrency",
                                 ]}
-                                // name={`fieldConstraintFormatCurrency-${field?.fieldName}`}
-                                // rules={[
-                                //   {
-                                //     required: true,
-                                //     message: "Please input title!",
-                                //   },
-                                // ]}
+                                // initialValue="user123!"
                               >
-                                <Input style={{ fontSize: "1.05rem" }} />
+                                <Select
+                                  placeholder="-- Select --"
+                                  // onChange={onCategoryChange}
+                                  // onClear={onCategoryClear}
+                                  // defaultValue={}
+                                >
+                                  {selectOptions.map((select) => {
+                                    return (
+                                      <Option value={select?.value}>
+                                        {select?.displayName}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
                               </Form.Item>
                               <Form.Item
                                 label="Selection Dynamic Fields"
                                 name={[
                                   field.name,
-                                  `fieldConstraintSelectionDynamicFields`,
+                                  "fieldConstraintSelectionDynamicFields",
                                 ]}
-                                // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
-                                // rules={[
-                                //   {
-                                //     required: true,
-                                //     message: "Please input title!",
-                                //   },
-                                // ]}
+                                // initialValue="user123!"
                               >
-                                <Input style={{ fontSize: "1.05rem" }} />
+                                <Select
+                                  placeholder="-- Select --"
+                                  // onChange={onCategoryChange}
+                                  // onClear={onCategoryClear}
+                                  // defaultValue={}
+                                >
+                                  {selectOptions.map((select) => {
+                                    return (
+                                      <Option value={select?.value}>
+                                        {select?.displayName}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
                               </Form.Item>
                               <Form.Item
                                 label="Selection Fetch"
                                 name={[
                                   field.name,
-                                  `fieldConstraintSelectionFetch`,
+                                  "fieldConstraintSelectionFetch",
                                 ]}
-                                // name={`fieldConstraintSelectionFetch-${field?.fieldName}`}
-                                // rules={[
-                                //   {
-                                //     required: true,
-                                //     message: "Please input title!",
-                                //   },
-                                // ]}
+                                // initialValue="user123!"
                               >
-                                <Input style={{ fontSize: "1.05rem" }} />
+                                <Select
+                                  placeholder="-- Select --"
+                                  // onChange={onCategoryChange}
+                                  // onClear={onCategoryClear}
+                                  // defaultValue={}
+                                >
+                                  {selectOptions.map((select) => {
+                                    return (
+                                      <Option value={select?.value}>
+                                        {select?.displayName}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
                               </Form.Item>
                               <Form.Item
                                 label="Notes"
