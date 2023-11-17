@@ -790,6 +790,33 @@ export const EditFormComponent = () => {
                                 <Row gutter={20}>
                                   <Col span={12}>
                                     <Form.Item
+                                      label="Field Type"
+                                      name={[field.name, "fieldType"]}
+                                      // initialValue="user123!"
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Please input Field Type!",
+                                        },
+                                      ]}
+                                    >
+                                      <Select
+                                        placeholder="-- Select Field Type --"
+                                        // onChange={onCategoryChange}
+                                        // onClear={onCategoryClear}
+                                        // defaultValue={}
+                                      >
+                                        {fieldTypeOptions.map((select) => {
+                                          return (
+                                            <Option value={select?.value}>
+                                              {select?.displayName}
+                                            </Option>
+                                          );
+                                        })}
+                                      </Select>
+                                    </Form.Item>
+
+                                    <Form.Item
                                       label="Field Name"
                                       name={[field.name, "fieldName"]}
                                       rules={[
@@ -897,33 +924,6 @@ export const EditFormComponent = () => {
                                     >
                                       <Input />
                                     </Form.Item> */}
-
-                                    <Form.Item
-                                      label="Field Type"
-                                      name={[field.name, "fieldType"]}
-                                      // initialValue="user123!"
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message: "Please input Field Type!",
-                                        },
-                                      ]}
-                                    >
-                                      <Select
-                                        placeholder="-- Select --"
-                                        // onChange={onCategoryChange}
-                                        // onClear={onCategoryClear}
-                                        // defaultValue={}
-                                      >
-                                        {fieldTypeOptions.map((select) => {
-                                          return (
-                                            <Option value={select?.value}>
-                                              {select?.displayName}
-                                            </Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    </Form.Item>
                                   </Col>
                                   <Col span={12}>
                                     <Card>
@@ -991,36 +991,26 @@ export const EditFormComponent = () => {
                                         </Select>
                                       </Form.Item>
                                       <Form.Item
-                                        label="Allowed Symbols"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `allowedSymbols`,
-                                        ]}
-                                        // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
-                                        // rules={[
-                                        //   {
-                                        //     required: true,
-                                        //     message: "Please input title!",
-                                        //   },
-                                        // ]}
-                                      >
-                                        <Input
-                                          style={{ fontSize: "1.05rem" }}
-                                        />
-                                      </Form.Item>
-                                      <Form.Item
                                         label="Format Currency"
                                         name={[
                                           field.name,
                                           "constraint",
                                           `formatCurrency`,
                                         ]}
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message:
+                                              "Please input Field Format Currency Constraint!",
+                                          },
+                                        ]}
                                         // initialValue="user123!"
                                       >
                                         <Select
                                           placeholder="-- Select --"
-                                          // onChange={onCategoryChange}
+                                          onChange={() => {
+                                            getRerender();
+                                          }}
                                           // onClear={onCategoryClear}
                                           // defaultValue={}
                                         >
@@ -1033,6 +1023,36 @@ export const EditFormComponent = () => {
                                           })}
                                         </Select>
                                       </Form.Item>
+                                      {console.log(
+                                        "tess -> ",
+                                        formEdit?.getFieldsValue()
+                                      )}
+                                      {formEdit?.getFieldsValue()?.fields
+                                        ? formEdit?.getFieldsValue()?.fields[
+                                            field?.name
+                                          ]?.constraint?.formatCurrency && (
+                                            <Form.Item
+                                              label="Allowed Symbols"
+                                              name={[
+                                                field.name,
+                                                "constraint",
+                                                `allowedSymbols`,
+                                              ]}
+                                              // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+                                              rules={[
+                                                {
+                                                  required: true,
+                                                  message:
+                                                    "Please input Field Allowed Symbols Constraint!",
+                                                },
+                                              ]}
+                                            >
+                                              <Input
+                                                style={{ fontSize: "1.05rem" }}
+                                              />
+                                            </Form.Item>
+                                          )
+                                        : null}
                                       <Form.Item
                                         label="Selection Dynamic Fields"
                                         name={[
