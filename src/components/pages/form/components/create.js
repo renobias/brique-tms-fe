@@ -200,6 +200,7 @@ export const CreateFormComponent = () => {
           selectionDynamicFields:
             formField?.fieldConstraintSelectionDynamicFields,
           selectionFetch: formField?.fieldConstraintSelectionFetch,
+          // selections: [...formField?.fieldConstraintSelections],
           createdTime: "2023-11-09 09:46:29.000000",
           createdBy: identity?.id,
           notes: formField?.fieldConstraintNotes,
@@ -633,8 +634,102 @@ export const CreateFormComponent = () => {
                               {formCreate?.getFieldsValue()?.formFields[
                                 field.name
                               ]?.fieldType == "selection" && (
+                                <Form.Item
+                                  label="Selection Fetch"
+                                  name={[
+                                    field.name,
+                                    "fieldConstraintSelectionFetch",
+                                  ]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Please input selection fetch!",
+                                    },
+                                  ]}
+                                  // initialValue="user123!"
+                                >
+                                  <Select
+                                    placeholder="-- Select --"
+                                    onChange={() => {
+                                      getRerender();
+                                    }}
+                                    // onClear={onCategoryClear}
+                                    // defaultValue={}
+                                  >
+                                    {selectOptions.map((select) => {
+                                      return (
+                                        <Option value={select?.value}>
+                                          {select?.displayName}
+                                        </Option>
+                                      );
+                                    })}
+                                  </Select>
+                                </Form.Item>
+                              )}
+                              {(formCreate?.getFieldsValue()?.formFields[
+                                field.name
+                              ]?.fieldType ==
+                                "selection") &&
+                                (formCreate?.getFieldsValue()?.formFields[
+                                  field.name
+                                ]?.fieldConstraintSelectionFetch ==
+                                  false) && (
                                 <>
-                                  <Form.Item
+                                  {/* Nest Form.List */}
+                                  <Form.Item label="Selections">
+                                    <Form.List
+                                      name={[
+                                        field.name,
+                                        "fieldConstraintSelections",
+                                      ]}
+                                    >
+                                      {(subFields, subOpt) => (
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: 16,
+                                          }}
+                                        >
+                                          {subFields.map((subField) => (
+                                            <Space key={subField.key}>
+                                              <Form.Item
+                                                noStyle
+                                                name={[
+                                                  subField.name,
+                                                  "selection",
+                                                ]}
+                                              >
+                                                <Input placeholder="selection" />
+                                              </Form.Item>
+                                              <Form.Item
+                                                noStyle
+                                                name={[
+                                                  subField.name,
+                                                  "displayName",
+                                                ]}
+                                              >
+                                                <Input placeholder="display name" />
+                                              </Form.Item>
+                                              <CloseOutlined
+                                                onClick={() => {
+                                                  subOpt.remove(subField.name);
+                                                }}
+                                              />
+                                            </Space>
+                                          ))}
+                                          <Button
+                                            type="dashed"
+                                            onClick={() => subOpt.add()}
+                                            block
+                                          >
+                                            + Add Selection
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </Form.List>
+                                  </Form.Item>
+                                  {/* <Form.Item
                                     label="Selection Dynamic Fields"
                                     name={[
                                       field.name,
@@ -656,30 +751,7 @@ export const CreateFormComponent = () => {
                                         );
                                       })}
                                     </Select>
-                                  </Form.Item>
-                                  <Form.Item
-                                    label="Selection Fetch"
-                                    name={[
-                                      field.name,
-                                      "fieldConstraintSelectionFetch",
-                                    ]}
-                                    // initialValue="user123!"
-                                  >
-                                    <Select
-                                      placeholder="-- Select --"
-                                      // onChange={onCategoryChange}
-                                      // onClear={onCategoryClear}
-                                      // defaultValue={}
-                                    >
-                                      {selectOptions.map((select) => {
-                                        return (
-                                          <Option value={select?.value}>
-                                            {select?.displayName}
-                                          </Option>
-                                        );
-                                      })}
-                                    </Select>
-                                  </Form.Item>
+                                  </Form.Item> */}
                                 </>
                               )}
                               <Form.Item
