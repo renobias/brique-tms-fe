@@ -802,7 +802,12 @@ export const EditFormComponent = () => {
                                     >
                                       <Select
                                         placeholder="-- Select Field Type --"
-                                        // onChange={onCategoryChange}
+                                        onChange={() => {
+                                          getRerender();
+                                        }}
+                                        onSelect={() => {
+                                          getRerender();
+                                        }}
                                         // onClear={onCategoryClear}
                                         // defaultValue={}
                                       >
@@ -902,12 +907,6 @@ export const EditFormComponent = () => {
                                     <Form.Item
                                       label="Notes"
                                       name={[field.name, "fieldNotes"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message: "Please input Field Notes!",
-                                        },
-                                      ]}
                                     >
                                       <Input />
                                     </Form.Item>
@@ -1053,54 +1052,74 @@ export const EditFormComponent = () => {
                                             </Form.Item>
                                           )
                                         : null}
-                                      <Form.Item
-                                        label="Selection Dynamic Fields"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `selectionDynamicFields`,
-                                        ]}
-                                        // initialValue="user123!"
-                                      >
-                                        <Select
-                                          placeholder="-- Select --"
-                                          // onChange={onCategoryChange}
-                                          // onClear={onCategoryClear}
-                                          // defaultValue={}
-                                        >
-                                          {selectOptions.map((select) => {
-                                            return (
-                                              <Option value={select?.value}>
-                                                {select?.displayName}
-                                              </Option>
-                                            );
-                                          })}
-                                        </Select>
-                                      </Form.Item>
-                                      <Form.Item
-                                        label="Selection Fetch"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `selectionFetch`,
-                                        ]}
-                                        // initialValue="user123!"
-                                      >
-                                        <Select
-                                          placeholder="-- Select --"
-                                          // onChange={onCategoryChange}
-                                          // onClear={onCategoryClear}
-                                          // defaultValue={}
-                                        >
-                                          {selectOptions.map((select) => {
-                                            return (
-                                              <Option value={select?.value}>
-                                                {select?.displayName}
-                                              </Option>
-                                            );
-                                          })}
-                                        </Select>
-                                      </Form.Item>
+                                      {console.log(
+                                        "fieldType -> ",
+                                        (formEdit?.getFieldsValue()).fields
+                                      )}
+                                      {(formEdit?.getFieldsValue()).fields
+                                        ? formEdit?.getFieldValue()?.fields[
+                                            field.name
+                                          ]?.fieldType == "selection" && (
+                                            <>
+                                              <Form.Item
+                                                label="Selection Dynamic Fields"
+                                                name={[
+                                                  field.name,
+                                                  "constraint",
+                                                  `selectionDynamicFields`,
+                                                ]}
+                                                // initialValue="user123!"
+                                              >
+                                                <Select
+                                                  placeholder="-- Select --"
+                                                  // onChange={onCategoryChange}
+                                                  // onClear={onCategoryClear}
+                                                  // defaultValue={}
+                                                >
+                                                  {selectOptions.map(
+                                                    (select) => {
+                                                      return (
+                                                        <Option
+                                                          value={select?.value}
+                                                        >
+                                                          {select?.displayName}
+                                                        </Option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Select>
+                                              </Form.Item>
+                                              <Form.Item
+                                                label="Selection Fetch"
+                                                name={[
+                                                  field.name,
+                                                  "constraint",
+                                                  `selectionFetch`,
+                                                ]}
+                                                // initialValue="user123!"
+                                              >
+                                                <Select
+                                                  placeholder="-- Select --"
+                                                  // onChange={onCategoryChange}
+                                                  // onClear={onCategoryClear}
+                                                  // defaultValue={}
+                                                >
+                                                  {selectOptions.map(
+                                                    (select) => {
+                                                      return (
+                                                        <Option
+                                                          value={select?.value}
+                                                        >
+                                                          {select?.displayName}
+                                                        </Option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Select>
+                                              </Form.Item>
+                                            </>
+                                          )
+                                        : null}
                                       <Form.Item
                                         label="Notes"
                                         name={[

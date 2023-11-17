@@ -399,7 +399,9 @@ export const CreateFormComponent = () => {
                             >
                               <Select
                                 placeholder="-- Select Field Type --"
-                                // onChange={onCategoryChange}
+                                onChange={() => {
+                                  getRerender();
+                                }}
                                 // onClear={onCategoryClear}
                                 // defaultValue={}
                               >
@@ -495,12 +497,6 @@ export const CreateFormComponent = () => {
                             <Form.Item
                               label="Notes"
                               name={[field.name, "fieldNotes"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please input Field Notes!",
-                                },
-                              ]}
                             >
                               <Input />
                             </Form.Item>
@@ -634,52 +630,58 @@ export const CreateFormComponent = () => {
                                   <Input style={{ fontSize: "1.05rem" }} />
                                 </Form.Item>
                               )}
-                              <Form.Item
-                                label="Selection Dynamic Fields"
-                                name={[
-                                  field.name,
-                                  "fieldConstraintSelectionDynamicFields",
-                                ]}
-                                // initialValue="user123!"
-                              >
-                                <Select
-                                  placeholder="-- Select --"
-                                  // onChange={onCategoryChange}
-                                  // onClear={onCategoryClear}
-                                  // defaultValue={}
-                                >
-                                  {selectOptions.map((select) => {
-                                    return (
-                                      <Option value={select?.value}>
-                                        {select?.displayName}
-                                      </Option>
-                                    );
-                                  })}
-                                </Select>
-                              </Form.Item>
-                              <Form.Item
-                                label="Selection Fetch"
-                                name={[
-                                  field.name,
-                                  "fieldConstraintSelectionFetch",
-                                ]}
-                                // initialValue="user123!"
-                              >
-                                <Select
-                                  placeholder="-- Select --"
-                                  // onChange={onCategoryChange}
-                                  // onClear={onCategoryClear}
-                                  // defaultValue={}
-                                >
-                                  {selectOptions.map((select) => {
-                                    return (
-                                      <Option value={select?.value}>
-                                        {select?.displayName}
-                                      </Option>
-                                    );
-                                  })}
-                                </Select>
-                              </Form.Item>
+                              {formCreate?.getFieldsValue()?.formFields[
+                                field.name
+                              ]?.fieldType == "selection" && (
+                                <>
+                                  <Form.Item
+                                    label="Selection Dynamic Fields"
+                                    name={[
+                                      field.name,
+                                      "fieldConstraintSelectionDynamicFields",
+                                    ]}
+                                    // initialValue="user123!"
+                                  >
+                                    <Select
+                                      placeholder="-- Select --"
+                                      // onChange={onCategoryChange}
+                                      // onClear={onCategoryClear}
+                                      // defaultValue={}
+                                    >
+                                      {selectOptions.map((select) => {
+                                        return (
+                                          <Option value={select?.value}>
+                                            {select?.displayName}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item
+                                    label="Selection Fetch"
+                                    name={[
+                                      field.name,
+                                      "fieldConstraintSelectionFetch",
+                                    ]}
+                                    // initialValue="user123!"
+                                  >
+                                    <Select
+                                      placeholder="-- Select --"
+                                      // onChange={onCategoryChange}
+                                      // onClear={onCategoryClear}
+                                      // defaultValue={}
+                                    >
+                                      {selectOptions.map((select) => {
+                                        return (
+                                          <Option value={select?.value}>
+                                            {select?.displayName}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Item>
+                                </>
+                              )}
                               <Form.Item
                                 label="Notes"
                                 name={[field.name, "fieldConstraintNotes"]}
