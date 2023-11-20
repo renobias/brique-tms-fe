@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authProvider } from "../../../../authProvider";
 import { encryptContent } from "../../../../crypto";
-import { CaretRightOutlined, CloseOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, CloseOutlined, DownOutlined, UpOutlined, RightOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 const { Option } = Select;
 
@@ -173,12 +173,12 @@ export const EditFormComponent = () => {
         maxLength: formField?.fieldMaxLength,
         orderNo: formField?.fieldOrderNo ?? 1,
         notes: formField?.fieldNotes ?? "",
-        createdTime: "2023-11-09 09:46:29.000000",
-        createdBy: identity?.id,
+        // createdTime: "2023-11-09 09:46:29.000000",
+        // createdBy: identity?.id,
         constraint: {
           ...formField?.constraint,
-          createdTime: "2023-11-09 09:46:29.000000",
-          createdBy: identity?.id,
+          // createdTime: "2023-11-09 09:46:29.000000",
+          // createdBy: identity?.id,
         },
       };
     });
@@ -652,6 +652,18 @@ export const EditFormComponent = () => {
     getRerender();
   };
 
+  const getIconComponent = (icon) => {
+    switch (icon) {
+      case "DownOutlined":
+        return <DownOutlined />;
+      case "RightOutlined":
+        return <RightOutlined />;
+      // Add more cases for other icons if needed
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <h2 style={{ marginBottom: "20px" }}>Edit Form</h2>
@@ -751,168 +763,192 @@ export const EditFormComponent = () => {
                       {fields.map(
                         (field, index) => {
                           const fieldForm = formEdit.getFieldValue("fields");
+                          console.log("field form -> ", fieldForm)
                           return (
                             !fieldForm?.at(index)?.isDelete && (
                               <Card
                                 size="small"
                                 title={
                                   fieldForm?.at(index)?.fieldDisplayName
-                                    ? `${
-                                        fieldForm?.at(index)?.fieldDisplayName
-                                      } `
+                                    ? `${fieldForm?.at(index)?.fieldDisplayName
+                                    } `
                                     : "New Field"
                                 }
                                 key={field.key}
                                 extra={
-                                  <CloseOutlined
-                                    onClick={() => {
-                                      const fieldsLatest =
-                                        formEdit.getFieldsValue();
-                                      if (fieldsLatest?.fields[index]) {
-                                        fieldsLatest.fields[
-                                          index
-                                        ].isDelete = true;
-                                        formEdit.setFieldsValue({
-                                          ...fieldsLatest,
-                                        });
-                                      } else {
-                                        remove(field.name);
-                                      }
-                                      console.log(
-                                        "form value  -> ",
-                                        formEdit.getFieldsValue()
-                                      );
-                                      console.log("fields -> ", fields);
-                                    }}
-                                  />
+                                  <>
+                                    <Space>
+                                      <Button type="text" icon={getIconComponent(fieldForm[
+                                        index
+                                      ]?.isExpand ? "DownOutlined" : "RightOutlined")} onClick={() => {
+                                        const fieldsLatestCondition =
+                                          formEdit.getFieldsValue();
+                                        if (fieldsLatestCondition?.fields[index]) {
+                                          fieldsLatestCondition.fields[
+                                            index
+                                          ].isExpand = !fieldsLatestCondition.fields[
+                                            index
+                                          ].isExpand;
+                                          formEdit.setFieldsValue({
+                                            ...fieldsLatestCondition,
+                                          });
+                                        } else {
+                                          fieldsLatestCondition.fields[
+                                            index
+                                          ] = { isExpand: true };
+                                          formEdit.setFieldsValue({
+                                            ...fieldsLatestCondition,
+                                          });
+                                        }
+                                      }} />
+                                      <Button type="text" icon={<CloseOutlined onClick={() => {
+                                        const fieldsLatest =
+                                          formEdit.getFieldsValue();
+                                        if (fieldsLatest?.fields[index]) {
+                                          fieldsLatest.fields[
+                                            index
+                                          ].isDelete = true;
+                                          formEdit.setFieldsValue({
+                                            ...fieldsLatest,
+                                          });
+                                        } else {
+                                          remove(field.name);
+                                        }
+                                      }} />} />
+                                    </Space>
+                                  </>
                                 }
                                 bodyStyle={{ backgroundColor: "#f5f5f5" }}
                               >
-                                <Row gutter={20}>
-                                  <Col span={12}>
-                                    <Form.Item
-                                      label="Field Type"
-                                      name={[field.name, "fieldType"]}
-                                      // initialValue="user123!"
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message: "Please input Field Type!",
-                                        },
-                                      ]}
-                                    >
-                                      <Select
-                                        placeholder="-- Select Field Type --"
-                                        onChange={() => {
-                                          getRerender();
-                                        }}
-                                        // onSelect={() => {
-                                        //   getRerender();
-                                        // }}
-                                        // onClear={onCategoryClear}
-                                        // defaultValue={}
-                                      >
-                                        {fieldTypeOptions.map((select) => {
-                                          return (
-                                            <Option value={select?.value}>
-                                              {select?.displayName}
-                                            </Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    </Form.Item>
+                                {
+                                  fieldForm && fieldForm[
+                                    index
+                                  ]?.isExpand ?
+                                    <Row gutter={20}>
+                                      <Col span={12}>
+                                        <Form.Item
+                                          label="Field Type"
+                                          name={[field.name, "fieldType"]}
+                                          // initialValue="user123!"
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message: "Please input Field Type!",
+                                            },
+                                          ]}
+                                        >
+                                          <Select
+                                            placeholder="-- Select Field Type --"
+                                            onChange={() => {
+                                              getRerender();
+                                            }}
+                                          // onSelect={() => {
+                                          //   getRerender();
+                                          // }}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                          >
+                                            {fieldTypeOptions.map((select) => {
+                                              return (
+                                                <Option value={select?.value}>
+                                                  {select?.displayName}
+                                                </Option>
+                                              );
+                                            })}
+                                          </Select>
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Field Name"
-                                      name={[field.name, "fieldName"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message: "Please input Field Name!",
-                                        },
-                                      ]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Field Name"
+                                          name={[field.name, "fieldName"]}
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message: "Please input Field Name!",
+                                            },
+                                          ]}
+                                        >
+                                          <Input />
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Field Display Name"
-                                      name={[field.name, "fieldDisplayName"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Please input Field Display Name!",
-                                        },
-                                      ]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Field Display Name"
+                                          name={[field.name, "fieldDisplayName"]}
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message:
+                                                "Please input Field Display Name!",
+                                            },
+                                          ]}
+                                        >
+                                          <Input />
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Mandatory"
-                                      name={[field.name, "fieldIsMandatory"]}
-                                      // initialValue="user123!"
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Please input Field Mandatory!",
-                                        },
-                                      ]}
-                                    >
-                                      <Select
-                                        placeholder="-- Select --"
-                                        // onChange={onCategoryChange}
-                                        // onClear={onCategoryClear}
-                                        // defaultValue={}
-                                      >
-                                        {selectOptions.map((select) => {
-                                          return (
-                                            <Option value={select?.value}>
-                                              {select?.displayName}
-                                            </Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Mandatory"
+                                          name={[field.name, "fieldIsMandatory"]}
+                                          // initialValue="user123!"
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message:
+                                                "Please input Field Mandatory!",
+                                            },
+                                          ]}
+                                        >
+                                          <Select
+                                            placeholder="-- Select --"
+                                          // onChange={onCategoryChange}
+                                          // onClear={onCategoryClear}
+                                          // defaultValue={}
+                                          >
+                                            {selectOptions.map((select) => {
+                                              return (
+                                                <Option value={select?.value}>
+                                                  {select?.displayName}
+                                                </Option>
+                                              );
+                                            })}
+                                          </Select>
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Min Length"
-                                      name={[field.name, "fieldMinLength"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Please input Field Min Length!",
-                                        },
-                                      ]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Min Length"
+                                          name={[field.name, "fieldMinLength"]}
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message:
+                                                "Please input Field Min Length!",
+                                            },
+                                          ]}
+                                        >
+                                          <Input />
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Max Length"
-                                      name={[field.name, "fieldMaxLength"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Please input Field Max Length!",
-                                        },
-                                      ]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Max Length"
+                                          name={[field.name, "fieldMaxLength"]}
+                                          rules={[
+                                            {
+                                              required: true,
+                                              message:
+                                                "Please input Field Max Length!",
+                                            },
+                                          ]}
+                                        >
+                                          <Input />
+                                        </Form.Item>
 
-                                    <Form.Item
-                                      label="Notes"
-                                      name={[field.name, "fieldNotes"]}
-                                    >
-                                      <Input />
-                                    </Form.Item>
+                                        <Form.Item
+                                          label="Notes"
+                                          name={[field.name, "fieldNotes"]}
+                                        >
+                                          <Input />
+                                        </Form.Item>
 
-                                    {/* <Form.Item
+                                        {/* <Form.Item
                                       label="Field Order Number"
                                       name={[field.name, "filterOrderNo"]}
                                       rules={[
@@ -924,249 +960,249 @@ export const EditFormComponent = () => {
                                     >
                                       <Input />
                                     </Form.Item> */}
-                                  </Col>
-                                  <Col span={12}>
-                                    <Card>
-                                      <h4>Constraint</h4>
-                                      <Form.Item
-                                        label="Accept Alphabet"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `acceptAlphabet`,
-                                        ]}
-                                        // initialValue="user123!"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message:
-                                              "Please input Field Accept Alphabet Constraint!",
-                                          },
-                                        ]}
-                                      >
-                                        <Select
-                                          placeholder="-- Select --"
-                                          // onChange={onCategoryChange}
-                                          // onClear={onCategoryClear}
-                                          // defaultValue={}
-                                        >
-                                          {selectOptions.map((select) => {
-                                            return (
-                                              <Option value={select?.value}>
-                                                {select?.displayName}
-                                              </Option>
-                                            );
-                                          })}
-                                        </Select>
-                                      </Form.Item>
-                                      <Form.Item
-                                        label="Accept Number"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `acceptNumber`,
-                                        ]}
-                                        // initialValue="user123!"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message:
-                                              "Please input Field Accept Number Constraint!",
-                                          },
-                                        ]}
-                                      >
-                                        <Select
-                                          placeholder="-- Select --"
-                                          // onChange={onCategoryChange}
-                                          // onClear={onCategoryClear}
-                                          // defaultValue={}
-                                        >
-                                          {selectOptions.map((select) => {
-                                            return (
-                                              <Option value={select?.value}>
-                                                {select?.displayName}
-                                              </Option>
-                                            );
-                                          })}
-                                        </Select>
-                                      </Form.Item>
-                                      <Form.Item
-                                        label="Format Currency"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          `formatCurrency`,
-                                        ]}
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message:
-                                              "Please input Field Format Currency Constraint!",
-                                          },
-                                        ]}
-                                        // initialValue="user123!"
-                                      >
-                                        <Select
-                                          placeholder="-- Select --"
-                                          onChange={() => {
-                                            getRerender();
-                                          }}
-                                          // onClear={onCategoryClear}
-                                          // defaultValue={}
-                                        >
-                                          {selectOptions.map((select) => {
-                                            return (
-                                              <Option value={select?.value}>
-                                                {select?.displayName}
-                                              </Option>
-                                            );
-                                          })}
-                                        </Select>
-                                      </Form.Item>
-                                      {console.log(
-                                        "tess -> ",
-                                        formEdit?.getFieldsValue()
-                                      )}
-                                      {formEdit?.getFieldsValue()?.fields
-                                        ? formEdit?.getFieldsValue()?.fields[
-                                            field?.name
-                                          ]?.constraint?.formatCurrency && (
-                                            <Form.Item
-                                              label="Allowed Symbols"
-                                              name={[
-                                                field.name,
-                                                "constraint",
-                                                `allowedSymbols`,
-                                              ]}
-                                              // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message:
-                                                    "Please input Field Allowed Symbols Constraint!",
-                                                },
-                                              ]}
+                                      </Col>
+                                      <Col span={12}>
+                                        <Card>
+                                          <h4>Constraint</h4>
+                                          <Form.Item
+                                            label="Accept Alphabet"
+                                            name={[
+                                              field.name,
+                                              "constraint",
+                                              `acceptAlphabet`,
+                                            ]}
+                                            // initialValue="user123!"
+                                            rules={[
+                                              {
+                                                required: true,
+                                                message:
+                                                  "Please input Field Accept Alphabet Constraint!",
+                                              },
+                                            ]}
+                                          >
+                                            <Select
+                                              placeholder="-- Select --"
+                                            // onChange={onCategoryChange}
+                                            // onClear={onCategoryClear}
+                                            // defaultValue={}
                                             >
-                                              <Input
-                                                style={{ fontSize: "1.05rem" }}
-                                              />
-                                            </Form.Item>
-                                          )
-                                        : null}
-                                      {(formEdit?.getFieldsValue()).fields
-                                        ? formEdit?.getFieldsValue()?.fields[
-                                            field.name
-                                          ]?.fieldType == "selection" && (
-                                            <Form.Item
-                                              label="Selection Fetch"
-                                              name={[
-                                                field.name,
-                                                ["constraint"],
-                                                "selectionFetch",
-                                              ]}
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message:
-                                                    "Please input selection fetch!",
-                                                },
-                                              ]}
+                                              {selectOptions.map((select) => {
+                                                return (
+                                                  <Option value={select?.value}>
+                                                    {select?.displayName}
+                                                  </Option>
+                                                );
+                                              })}
+                                            </Select>
+                                          </Form.Item>
+                                          <Form.Item
+                                            label="Accept Number"
+                                            name={[
+                                              field.name,
+                                              "constraint",
+                                              `acceptNumber`,
+                                            ]}
+                                            // initialValue="user123!"
+                                            rules={[
+                                              {
+                                                required: true,
+                                                message:
+                                                  "Please input Field Accept Number Constraint!",
+                                              },
+                                            ]}
+                                          >
+                                            <Select
+                                              placeholder="-- Select --"
+                                            // onChange={onCategoryChange}
+                                            // onClear={onCategoryClear}
+                                            // defaultValue={}
+                                            >
+                                              {selectOptions.map((select) => {
+                                                return (
+                                                  <Option value={select?.value}>
+                                                    {select?.displayName}
+                                                  </Option>
+                                                );
+                                              })}
+                                            </Select>
+                                          </Form.Item>
+                                          <Form.Item
+                                            label="Format Currency"
+                                            name={[
+                                              field.name,
+                                              "constraint",
+                                              `formatCurrency`,
+                                            ]}
+                                            rules={[
+                                              {
+                                                required: true,
+                                                message:
+                                                  "Please input Field Format Currency Constraint!",
+                                              },
+                                            ]}
+                                          // initialValue="user123!"
+                                          >
+                                            <Select
+                                              placeholder="-- Select --"
+                                              onChange={() => {
+                                                getRerender();
+                                              }}
+                                            // onClear={onCategoryClear}
+                                            // defaultValue={}
+                                            >
+                                              {selectOptions.map((select) => {
+                                                return (
+                                                  <Option value={select?.value}>
+                                                    {select?.displayName}
+                                                  </Option>
+                                                );
+                                              })}
+                                            </Select>
+                                          </Form.Item>
+                                          {console.log(
+                                            "tess -> ",
+                                            formEdit?.getFieldsValue()
+                                          )}
+                                          {formEdit?.getFieldsValue()?.fields
+                                            ? formEdit?.getFieldsValue()?.fields[
+                                              field?.name
+                                            ]?.constraint?.formatCurrency && (
+                                              <Form.Item
+                                                label="Allowed Symbols"
+                                                name={[
+                                                  field.name,
+                                                  "constraint",
+                                                  `allowedSymbols`,
+                                                ]}
+                                                // name={`fieldConstraintAllowedSymbols-${field?.fieldName}`}
+                                                rules={[
+                                                  {
+                                                    required: true,
+                                                    message:
+                                                      "Please input Field Allowed Symbols Constraint!",
+                                                  },
+                                                ]}
+                                              >
+                                                <Input
+                                                  style={{ fontSize: "1.05rem" }}
+                                                />
+                                              </Form.Item>
+                                            )
+                                            : null}
+                                          {(formEdit?.getFieldsValue()).fields
+                                            ? formEdit?.getFieldsValue()?.fields[
+                                              field.name
+                                            ]?.fieldType == "selection" && (
+                                              <Form.Item
+                                                label="Selection Fetch"
+                                                name={[
+                                                  field.name,
+                                                  ["constraint"],
+                                                  "selectionFetch",
+                                                ]}
+                                                rules={[
+                                                  {
+                                                    required: true,
+                                                    message:
+                                                      "Please input selection fetch!",
+                                                  },
+                                                ]}
                                               // initialValue="user123!"
-                                            >
-                                              <Select
-                                                placeholder="-- Select --"
-                                                onChange={() => {
-                                                  getRerender();
-                                                }}
+                                              >
+                                                <Select
+                                                  placeholder="-- Select --"
+                                                  onChange={() => {
+                                                    getRerender();
+                                                  }}
                                                 // onClear={onCategoryClear}
                                                 // defaultValue={}
-                                              >
-                                                {selectOptions.map((select) => {
-                                                  return (
-                                                    <Option
-                                                      value={select?.value}
-                                                    >
-                                                      {select?.displayName}
-                                                    </Option>
-                                                  );
-                                                })}
-                                              </Select>
-                                            </Form.Item>
-                                          )
-                                        : null}
-                                      {(formEdit?.getFieldsValue()).fields
-                                        ? formEdit?.getFieldValue()?.fields[
-                                            field.name
-                                          ]?.fieldType == "selection" &&
-                                          formEdit?.getFieldValue()?.fields[
-                                            field.name
-                                          ]?.constraint?.selectionFetch ==
-                                            false && (
-                                            <>
-                                              {/* Nest Form.List */}
-                                              <Form.Item label="Selections">
-                                                <Form.List
-                                                  name={[
-                                                    field.name,
-                                                    ["constraint"],
-                                                    "selections",
-                                                  ]}
                                                 >
-                                                  {(subFields, subOpt) => (
-                                                    <div
-                                                      style={{
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        rowGap: 16,
-                                                      }}
-                                                    >
-                                                      {subFields.map(
-                                                        (subField) => (
-                                                          <Space
-                                                            key={subField.key}
-                                                          >
-                                                            <Form.Item
-                                                              noStyle
-                                                              name={[
-                                                                subField.name,
-                                                                "selection",
-                                                              ]}
-                                                            >
-                                                              <Input placeholder="selection" />
-                                                            </Form.Item>
-                                                            <Form.Item
-                                                              noStyle
-                                                              name={[
-                                                                subField.name,
-                                                                "displayName",
-                                                              ]}
-                                                            >
-                                                              <Input placeholder="display name" />
-                                                            </Form.Item>
-                                                            <CloseOutlined
-                                                              onClick={() => {
-                                                                subOpt.remove(
-                                                                  subField.name
-                                                                );
-                                                              }}
-                                                            />
-                                                          </Space>
-                                                        )
-                                                      )}
-                                                      <Button
-                                                        type="dashed"
-                                                        onClick={() =>
-                                                          subOpt.add()
-                                                        }
-                                                        block
+                                                  {selectOptions.map((select) => {
+                                                    return (
+                                                      <Option
+                                                        value={select?.value}
                                                       >
-                                                        + Add Selection
-                                                      </Button>
-                                                    </div>
-                                                  )}
-                                                </Form.List>
+                                                        {select?.displayName}
+                                                      </Option>
+                                                    );
+                                                  })}
+                                                </Select>
                                               </Form.Item>
-                                              {/* <Form.Item
+                                            )
+                                            : null}
+                                          {(formEdit?.getFieldsValue()).fields
+                                            ? formEdit?.getFieldValue()?.fields[
+                                              field.name
+                                            ]?.fieldType == "selection" &&
+                                            formEdit?.getFieldValue()?.fields[
+                                              field.name
+                                            ]?.constraint?.selectionFetch ==
+                                            false && (
+                                              <>
+                                                {/* Nest Form.List */}
+                                                <Form.Item label="Selections">
+                                                  <Form.List
+                                                    name={[
+                                                      field.name,
+                                                      ["constraint"],
+                                                      "selections",
+                                                    ]}
+                                                  >
+                                                    {(subFields, subOpt) => (
+                                                      <div
+                                                        style={{
+                                                          display: "flex",
+                                                          flexDirection: "column",
+                                                          rowGap: 16,
+                                                        }}
+                                                      >
+                                                        {subFields.map(
+                                                          (subField) => (
+                                                            <Space
+                                                              key={subField.key}
+                                                            >
+                                                              <Form.Item
+                                                                noStyle
+                                                                name={[
+                                                                  subField.name,
+                                                                  "selection",
+                                                                ]}
+                                                              >
+                                                                <Input placeholder="selection" />
+                                                              </Form.Item>
+                                                              <Form.Item
+                                                                noStyle
+                                                                name={[
+                                                                  subField.name,
+                                                                  "displayName",
+                                                                ]}
+                                                              >
+                                                                <Input placeholder="display name" />
+                                                              </Form.Item>
+                                                              <CloseOutlined
+                                                                onClick={() => {
+                                                                  subOpt.remove(
+                                                                    subField.name
+                                                                  );
+                                                                }}
+                                                              />
+                                                            </Space>
+                                                          )
+                                                        )}
+                                                        <Button
+                                                          type="dashed"
+                                                          onClick={() =>
+                                                            subOpt.add()
+                                                          }
+                                                          block
+                                                        >
+                                                          + Add Selection
+                                                        </Button>
+                                                      </div>
+                                                    )}
+                                                  </Form.List>
+                                                </Form.Item>
+                                                {/* <Form.Item
                                                 label="Selection Dynamic Fields"
                                                 name={[
                                                   field.name,
@@ -1194,37 +1230,67 @@ export const EditFormComponent = () => {
                                                   )}
                                                 </Select>
                                               </Form.Item> */}
-                                            </>
-                                          )
-                                        : null}
+                                              </>
+                                            )
+                                            : null}
+                                          <Form.Item
+                                            label="Notes"
+                                            name={[
+                                              field.name,
+                                              "constraint",
+                                              "notes",
+                                            ]}
+                                          >
+                                            <Input />
+                                          </Form.Item>
+                                        </Card>
+                                      </Col>
                                       <Form.Item
-                                        label="Notes"
-                                        name={[
-                                          field.name,
-                                          "constraint",
-                                          "notes",
+                                        label="Form structure Id"
+                                        name={[field.name, "formStructureId"]}
+                                        initialValue={formId}
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message:
+                                              "Please input Form Structure Id!",
+                                          },
                                         ]}
+                                        style={{ display: "none" }}
                                       >
                                         <Input />
                                       </Form.Item>
-                                    </Card>
-                                  </Col>
-                                  <Form.Item
-                                    label="Form structure Id"
-                                    name={[field.name, "formStructureId"]}
-                                    initialValue={formId}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message:
-                                          "Please input Form Structure Id!",
-                                      },
-                                    ]}
-                                    style={{ display: "none" }}
-                                  >
-                                    <Input />
-                                  </Form.Item>
-                                </Row>
+                                    </Row> : <Row>
+                                      <Col span={24} style={{ textAlign: "center" }}><Button onClick={() => {
+                                        console.log("onclick btn")
+                                        const fieldsLatestCondition =
+                                          formEdit.getFieldsValue();
+                                        console.log("field latest -> ", fieldsLatestCondition)
+                                        console.log("current field -> ", fieldsLatestCondition?.fields[index])
+                                        if (fieldsLatestCondition?.fields[index]) {
+                                          fieldsLatestCondition.fields[
+                                            index
+                                          ].isExpand = !fieldsLatestCondition.fields[
+                                            index
+                                          ].isExpand;
+                                          formEdit.setFieldsValue({
+                                            ...fieldsLatestCondition,
+                                          });
+                                        } else {
+                                          console.log("current index -> ", index)
+                                          console.log("current field -> ", fieldsLatestCondition.fields[
+                                            index
+                                          ])
+                                          fieldsLatestCondition.fields[
+                                            index
+                                          ] = { isExpand: true };
+                                          formEdit.setFieldsValue({
+                                            ...fieldsLatestCondition,
+                                          });
+                                        }
+                                      }} style={{ cursor: "pointer" }}>content</Button></Col>
+                                    </Row>
+                                }
                               </Card>
                             )
                           );

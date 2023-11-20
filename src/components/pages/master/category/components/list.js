@@ -4,18 +4,22 @@ import { PlusOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../../definitions";
 import { isSuccesfullRequest } from "../../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
-import { useGet } from "../../../../../hooks/data/useGet";
+import { useGetList } from "../../../../../hooks/data/useGetList";
 
 export const ListCategoryMasterComponent = () => {
   const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
 
-  const { state: stateCategoryList, fire: getCategoryList } = useGet({
+  const { state: stateCategoryList, fire: getCategoryList } = useGetList({
     dataProviderName: "briqueTms",
-    resource: "form/categories",
+    resource: "form/categories/list",
+    pagination: {
+      current: 1,
+      pageSize: 10
+    },
     handleResult: () => {
       if (isSuccesfullRequest(stateCategoryList.statusCode)) {
-        setCategoryList([...stateCategoryList?.data?.categories]);
+        setCategoryList([...stateCategoryList?.data]);
       }
     },
   });
@@ -62,10 +66,14 @@ export const ListCategoryMasterComponent = () => {
   useEffect(() => {
     getCategoryList({
       dataProviderName: "briqueTms",
-      resource: "form/categories",
+      resource: "form/categories/list",
+      pagination: {
+        current: 1,
+        pageSize: 10
+      },
       handleResult: () => {
         if (isSuccesfullRequest(stateCategoryList.statusCode)) {
-          setCategoryList([...stateCategoryList?.data?.categories]);
+          setCategoryList([...stateCategoryList?.data]);
         }
       },
     });
@@ -110,6 +118,32 @@ export const ListCategoryMasterComponent = () => {
         dataSource={categoryList}
         columns={columns}
         loading={stateCategoryList.isLoading}
+        pagination={{
+          pfullnameSize: stateCategoryList?.perPage, // Number of items per pfullname
+          total: stateCategoryList?.totalAllData, // Total number of items
+          showSizeChanger: true, // Show option to change pfullname size
+          pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+          onChange: (page, pageSize) => {
+            getCategoryList({
+              dataProviderName: "briqueTms",
+              resource: "form/categories/list",
+              pagination: {
+                current: page,
+                pageSize: pageSize
+              },
+              handleResult: () => {
+                if (isSuccesfullRequest(stateCategoryList.statusCode)) {
+                  setCategoryList([...stateCategoryList?.data]);
+                }
+              },
+            });
+          },
+          // onShowSizeChange: (current, size) => {
+          //   console.log("current -> ", current);
+          //   console.log("size -> ", size);
+          // }
+        }}
+        scroll={{ y: `calc(100vh - 400px)` }}
       />
     </>
   );

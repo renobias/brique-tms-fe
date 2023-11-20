@@ -4,18 +4,22 @@ import { PlusOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
-import { useGet } from "../../../../hooks/data/useGet";
+import { useGetList } from "../../../../hooks/data/useGetList";
 
 export const ListFormComponent = () => {
   const [formStructureList, setFormStructureList] = useState([]);
   const navigate = useNavigate();
 
-  const { state: stateFormStructureList, fire: getFormList } = useGet({
+  const { state: stateFormStructureList, fire: getFormList } = useGetList({
     dataProviderName: "briqueTms",
     resource: "form/list",
+    pagination: {
+      current: 1,
+      pageSize: 10
+    },
     handleResult: () => {
       if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
-        setFormStructureList([...stateFormStructureList?.data?.forms]);
+        setFormStructureList([...stateFormStructureList?.data]);
       }
     },
   });
@@ -69,9 +73,13 @@ export const ListFormComponent = () => {
     getFormList({
       dataProviderName: "briqueTms",
       resource: "form/list",
+      pagination: {
+        current: 1,
+        pageSize: 10
+      },
       handleResult: () => {
         if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
-          setFormStructureList([...stateFormStructureList?.data?.forms]);
+          setFormStructureList([...stateFormStructureList?.data]);
         }
       },
     });
@@ -118,11 +126,31 @@ export const ListFormComponent = () => {
         columns={columns}
         loading={stateFormStructureList.isLoading}
         pagination={{
-          pfullnameSize: 10, // Number of items per pfullname
-          total: formStructureList.length, // Total number of items
+          pfullnameSize: stateFormStructureList?.perPage, // Number of items per pfullname
+          total: stateFormStructureList?.totalAllData, // Total number of items
           showSizeChanger: true, // Show option to change pfullname size
           pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+          onChange: (page, pageSize) => {
+            getFormList({
+              dataProviderName: "briqueTms",
+              resource: "form/list",
+              pagination: {
+                current: page,
+                pageSize: pageSize
+              },
+              handleResult: () => {
+                if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
+                  setFormStructureList([...stateFormStructureList?.data]);
+                }
+              },
+            });
+          },
+          // onShowSizeChange: (current, size) => {
+          //   console.log("current -> ", current);
+          //   console.log("size -> ", size);
+          // }
         }}
+        scroll={{ y: `calc(100vh - 400px)` }}
       />
     </>
   );

@@ -8,9 +8,9 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
-          ...query,
-          accessToken: identity?.token,
-        })}`
+        ...query,
+        accessToken: identity?.token,
+      })}`
       : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     const { headers, method } = meta ?? {};
@@ -36,9 +36,9 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
-          ...query,
-          accessToken: identity?.token,
-        })}`
+        ...query,
+        accessToken: identity?.token,
+      })}`
       : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     console.log("url -> ", url);
@@ -52,6 +52,45 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
 
     return {
       data,
+      status,
+      statusText,
+    };
+  },
+
+  getList: async ({ resource, pagination, meta }) => {
+    const identity = authProvider.getIdentity();
+    const url = `${apiUrl}/${resource}`;
+
+    const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+
+    const { headers: headersFromMeta, method } = meta ?? {};
+    const requestMethod = method ?? "get";
+
+    const query = {
+      accessToken: String,
+      page: Number,
+      per_page: Number,
+    };
+
+    if (mode === "server") {
+      query.accessToken = identity?.token;
+      query.page = current;
+      query.per_page = pageSize;
+    }
+
+    const { data, status, statusText, headers } = await httpClient[
+      requestMethod
+    ](`${url}?${queryString.stringify(query)}`, {
+      headers: headersFromMeta,
+    });
+
+    return {
+      page: data?.page,
+      per_page: data?.per_page,
+      total_all_data: data?.total_all_data,
+      total_currentpage_data: data?.total_currentpage_data,
+      total_pages: data?.total_pages,
+      data: data?.data,
       status,
       statusText,
     };
@@ -106,5 +145,5 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
     return apiUrl;
   },
 
-  custom: async () => {},
+  custom: async () => { },
 });
