@@ -200,15 +200,13 @@ export const CreateFormComponent = () => {
           selectionDynamicFields:
             formField?.fieldConstraintSelectionDynamicFields,
           selectionFetch: formField?.fieldConstraintSelectionFetch,
-          // selections: [...formField?.fieldConstraintSelections],
+          selections: [...formField?.fieldConstraintSelections],
           // createdTime: "2023-11-09 09:46:29.000000",
           // createdBy: identity?.id,
           notes: formField?.fieldConstraintNotes,
         },
       };
     });
-
-    console.log("fields -> ", fields);
 
     const payloadSend = {
       isCreate: true,
