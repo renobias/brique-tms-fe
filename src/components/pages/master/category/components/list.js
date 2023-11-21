@@ -15,7 +15,7 @@ export const ListCategoryMasterComponent = () => {
     resource: "form/categories/list",
     pagination: {
       current: 1,
-      pageSize: 10
+      pageSize: 10,
     },
     handleResult: () => {
       if (isSuccesfullRequest(stateCategoryList.statusCode)) {
@@ -46,15 +46,9 @@ export const ListCategoryMasterComponent = () => {
       render: (_, record) => {
         return (
           <Button
-            onClick={() => {
-              // router.push({
-              //   pathname: "/master/movies/edit",
-              //   query: {
-              //     id: record.id,
-              //     studioId: record.StudioId,
-              //   },
-              // });
-            }}
+          // onClick={() => {
+          //   navigate("/master/category/create");
+          // }}
           >
             Edit
           </Button>
@@ -69,7 +63,7 @@ export const ListCategoryMasterComponent = () => {
       resource: "form/categories/list",
       pagination: {
         current: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       handleResult: () => {
         if (isSuccesfullRequest(stateCategoryList.statusCode)) {
@@ -94,9 +88,7 @@ export const ListCategoryMasterComponent = () => {
               backgroundColor: colorTheme.Background.buttonPositive["light"],
             }}
             onClick={() => {
-              // router.push({
-              //   pathname: "/master/movies/create",
-              // });
+              navigate("/master/category/create");
             }}
           >
             Add
@@ -129,7 +121,7 @@ export const ListCategoryMasterComponent = () => {
               resource: "form/categories/list",
               pagination: {
                 current: page,
-                pageSize: pageSize
+                pageSize: pageSize,
               },
               handleResult: () => {
                 if (isSuccesfullRequest(stateCategoryList.statusCode)) {

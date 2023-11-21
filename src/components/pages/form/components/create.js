@@ -34,8 +34,6 @@ const panelStyle = {
 
 export const CreateFormComponent = () => {
   const identity = authProvider.getIdentity();
-  const { clientKey, sharedKey } = authProvider.getIdentity();
-  const location = useLocation();
 
   const { openNotification } = useNotification();
   const navigate = useNavigate();
@@ -70,7 +68,6 @@ export const CreateFormComponent = () => {
     },
   ]);
   const [rerender, setRerender] = useState(false);
-
   const { state: stateCategories, fire: getCategories } = useGet({
     dataProviderName: "briqueTms",
     resource: "form/categories",
@@ -92,8 +89,6 @@ export const CreateFormComponent = () => {
       }
     },
   });
-
-  const [formStructure, setFormStructure] = useState({});
   const [formCreate] = Form.useForm();
 
   const getRerender = () => {
@@ -138,47 +133,6 @@ export const CreateFormComponent = () => {
   }, []);
 
   const onFinish = async (values) => {
-    /**
-   * {
-   "isCreate":true,
-   "data":{
-      "formInfo":{
-         "name":"tes",
-         "displayname":"tes",
-         "formcategoryid":"tes",
-         "orderno":"tes",
-         "createdtime":"tes",
-         "createdby":"tes",
-         "notes":"tes"
-      },
-      "formFields":[
-         {
-            "name":"tes",
-            "displayName":"tes",
-            "fieldType":"tes",
-            "isMandatory":"tes",
-            "minLength":"tes",
-            "maxLength":"tes",
-            "orderno":"tes",
-            "createdtime":"tes",
-            "createdby":"tes",
-            "notes":"tes",
-            "constraint":{
-               "acceptAlphabet":"tes",
-               "acceptNumber":"tes",
-               "formatCurrency":"tes",
-               "allowedSymbols":"tes",
-               "selectionDynamicFields":"tes",
-               "selectionFetch":"tes",
-               "createdtime":"tes",
-               "createdby":"tes",
-               "notes":"tes"
-            }
-         }
-      ]
-   }
-}
-   */
     console.log("onFinish Form Values -> ", values);
     const fields = values?.formFields?.map((formField) => {
       return {
@@ -189,8 +143,6 @@ export const CreateFormComponent = () => {
         minLength: formField?.fieldMinLength,
         maxLength: formField?.fieldMaxLength,
         orderNo: formField?.orderNo ?? 1,
-        // createdTime: "2023-11-09 09:46:29.000000",
-        // createdBy: "1",
         notes: formField?.fieldNotes ?? "",
         constraint: {
           acceptAlphabet: formField?.fieldConstraintAcceptAlphabet,
@@ -201,8 +153,6 @@ export const CreateFormComponent = () => {
             formField?.fieldConstraintSelectionDynamicFields,
           selectionFetch: formField?.fieldConstraintSelectionFetch,
           selections: [...formField?.fieldConstraintSelections],
-          // createdTime: "2023-11-09 09:46:29.000000",
-          // createdBy: identity?.id,
           notes: formField?.fieldConstraintNotes,
         },
       };
@@ -304,12 +254,6 @@ export const CreateFormComponent = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           style={formStyle}
-          // labelCol={{
-          //   span: 6,
-          // }}
-          // wrapperCol={{
-          //   span: 18,
-          // }}
           name="dynamic_form_complex"
           initialValues={{
             fields: [],
