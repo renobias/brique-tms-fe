@@ -46,9 +46,10 @@ export const ListCategoryMasterComponent = () => {
       render: (_, record) => {
         return (
           <Button
-          // onClick={() => {
-          //   navigate("/master/category/create");
-          // }}
+            onClick={() => {
+              // navigate("/master/category/create");
+              navigate(`/master/category/edit?id=${record.id}`);
+            }}
           >
             Edit
           </Button>

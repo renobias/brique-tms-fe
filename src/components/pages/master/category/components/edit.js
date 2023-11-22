@@ -29,18 +29,30 @@ import {
 
 export const EditCategoriesComponent = () => {
   const identity = authProvider.getIdentity();
+  const location = useLocation();
   const categoryId = new URLSearchParams(location.search).get("id");
   const { openNotification } = useNotification();
   const navigate = useNavigate();
 
   const [formEdit] = Form.useForm();
 
-  const { state: getCategoryState, fire: getCategory } = useGet({
+  const { state: categoryState, fire: getCategory } = useGet({
     dataProviderName: "briqueTms",
     resource: "form/category",
-    query: {},
+    query: { categoryId },
     handleResult: () => {
-      if (isSuccesfullRequest(getCategoryState?.statusCode)) {
+      if (isSuccesfullRequest(categoryState?.statusCode)) {
+        console.log("success");
+      }
+    },
+  });
+  const { state: editCategoriesState, fire: editCategories } = usePost({
+    dataProviderName: "briqueTms",
+    resource: "form/categories",
+    variables: "asdasdasd",
+    meta: { headers: { "Content-Type": "text/plain" } },
+    handleResult: () => {
+      if (isSuccesfullRequest(editCategoriesState?.statusCode)) {
         console.log("success");
       }
     },
@@ -50,10 +62,12 @@ export const EditCategoriesComponent = () => {
     getCategory({
       dataProviderName: "briqueTms",
       resource: "form/category",
-      query: {},
+      query: { categoryId },
       handleResult: () => {
-        if (isSuccesfullRequest(getCategoryState?.statusCode)) {
-          getCategoryState();
+        if (isSuccesfullRequest(categoryState?.statusCode)) {
+          console.log("category state ->  ", categoryState);
+          formEdit.setFieldsValue({ ...categoryState?.data?.category });
+          // getCategoryState();
         }
       },
     });
@@ -63,11 +77,15 @@ export const EditCategoriesComponent = () => {
     console.log("onFinish Form Values -> ", values);
 
     const payloadSend = {
-      isCreate: true,
       data: {
-        name: values?.name,
-        displayName: values?.displayName,
-        notes: values?.notes,
+        categories: [
+          {
+            id: categoryId,
+            name: values?.name,
+            displayName: values?.displayName,
+            notes: values?.notes,
+          },
+        ],
       },
     };
     const data = {
@@ -75,16 +93,20 @@ export const EditCategoriesComponent = () => {
       sharedKey: identity?.sharedKey,
       payload: { ...payloadSend },
     };
-    // editCategory({
-    //   dataProviderName: "briqueTms",
-    //   resource: "form/categories",
-    //   query: { categoryId },
-    //   handleResult: () => {
-    //     if (isSuccesfullRequest(editCategoryState?.statusCode)) {
-    //       console.log("success");
-    //     }
-    //   },
-    // });
+    editCategories({
+      dataProviderName: "briqueTms",
+      resource: "form/categories",
+      variables: encryptContent(data),
+      meta: { headers: { "Content-Type": "text/plain" } },
+      handleResult: () => {
+        if (isSuccesfullRequest(editCategoriesState?.statusCode)) {
+          console.log("success");
+          navigate("/master/category", {
+            replace: true,
+          });
+        }
+      },
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -97,8 +119,10 @@ export const EditCategoriesComponent = () => {
 
   return (
     <>
-      <h2 style={{ marginBottom: "20px" }}>Add Category</h2>
-      <LoadingTransparentPage isLoading={createCategoryState?.isLoading}>
+      <h2 style={{ marginBottom: "20px" }}>Edit Category</h2>
+      <LoadingTransparentPage
+        isLoading={editCategoriesState?.isLoading || categoryState?.isLoading}
+      >
         <Form
           layout="vertical"
           form={formEdit}
@@ -172,7 +196,7 @@ export const EditCategoriesComponent = () => {
                 marginTop: "30px",
               }}
             >
-              Add Category
+              Edit Category
             </Button>
           </Form.Item>
         </Form>

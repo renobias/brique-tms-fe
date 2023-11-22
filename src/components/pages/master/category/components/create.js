@@ -52,9 +52,13 @@ export const CreateCategoriesComponent = () => {
     const payloadSend = {
       isCreate: true,
       data: {
-        name: values?.name,
-        displayName: values?.displayName,
-        notes: values?.notes,
+        categories: [
+          {
+            name: values?.name,
+            displayName: values?.displayName,
+            notes: values?.notes,
+          },
+        ],
       },
     };
     const data = {
