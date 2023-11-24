@@ -142,10 +142,7 @@ export const EditFormComponent = () => {
           // setFormStructure({ ...stateFormStructure?.data });
           formEdit.setFieldsValue({
             ...stateFormStructure?.data,
-            category:
-              stateFormStructure?.data?.formCategoryId == 1
-                ? "financial"
-                : "nonFinancial",
+            category: stateFormStructure?.data?.formCategoryId,
           });
         }
       },
@@ -195,7 +192,7 @@ export const EditFormComponent = () => {
           id: formId,
           name: values?.formName,
           displayName: values?.formDisplayName,
-          formCategoryId: values?.category == "financial" ? 1 : 2,
+          formCategoryId: values?.category,
           orderNo: "1",
           notes: values?.notes,
         },
@@ -268,22 +265,25 @@ export const EditFormComponent = () => {
   console.log("form fields ->", formEdit.getFieldsValue());
 
   const onCategoryChange = (value) => {
-    console.log("value -> ", value);
-    switch (value) {
-      case "financial":
-        formEdit.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      case "nonFinancial":
-        formEdit.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      case "other":
-        formEdit.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      default:
-    }
+    console.log("value change -> ", value);
+    // formEdit.setFieldsValue({ category: value });
+    getRerender();
+    // getRerender();
+    // switch (value) {
+    //   case "financial":
+    //     formEdit.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   case "nonFinancial":
+    //     formEdit.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   case "other":
+    //     formEdit.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   default:
+    // }
   };
 
   const onCategoryClear = () => {
@@ -337,7 +337,10 @@ export const EditFormComponent = () => {
             >
               {categoriesOptions.map((category) => {
                 return (
-                  <Option value={category?.name}>
+                  <Option
+                    // value={category?.name}
+                    value={category?.id}
+                  >
                     {category?.displayName}
                   </Option>
                 );

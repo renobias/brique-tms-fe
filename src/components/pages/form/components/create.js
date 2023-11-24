@@ -102,21 +102,22 @@ export const CreateFormComponent = () => {
 
   const onCategoryChange = (value) => {
     console.log("value -> ", value);
-    switch (value) {
-      case "financial":
-        formCreate.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      case "nonFinancial":
-        formCreate.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      case "other":
-        formCreate.setFieldsValue({ category: value });
-        getRerender();
-        break;
-      default:
-    }
+    getRerender();
+    // switch (value) {
+    //   case "financial":
+    //     formCreate.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   case "nonFinancial":
+    //     formCreate.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   case "other":
+    //     formCreate.setFieldsValue({ category: value });
+    //     getRerender();
+    //     break;
+    //   default:
+    // }
   };
 
   const onCategoryClear = () => {
@@ -177,7 +178,8 @@ export const CreateFormComponent = () => {
         formInfo: {
           name: values?.formName,
           displayName: values?.formDisplayName,
-          formCategoryId: values?.category == "financial" ? 1 : 2,
+          // formCategoryId: values?.category == "financial" ? 1 : 2,
+          formCategoryId: values?.category,
           orderNo: 1,
           createdTime: "2023-11-09 09:46:29.000000",
           createdBy: 1,
@@ -186,6 +188,8 @@ export const CreateFormComponent = () => {
         formFields: fields ? [...fields] : [],
       },
     };
+
+    console.log("payload send -> ", payloadSend);
 
     const data = {
       clientKey: identity?.clientKey,
@@ -254,6 +258,8 @@ export const CreateFormComponent = () => {
     }
   };
 
+  console.log("category select -> ", formCreate.getFieldValue("category"));
+
   return (
     <>
       <h2 style={{ marginBottom: "20px" }}>Add Form</h2>
@@ -295,7 +301,10 @@ export const CreateFormComponent = () => {
             >
               {categoriesOptions.map((category) => {
                 return (
-                  <Option value={category?.name}>
+                  <Option
+                    // value={category?.name}
+                    value={category?.id}
+                  >
                     {category?.displayName}
                   </Option>
                 );
