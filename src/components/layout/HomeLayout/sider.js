@@ -7,7 +7,7 @@ import {
   LeftOutlined,
   RightOutlined,
   FormOutlined,
-  TableOutlined
+  TableOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,6 +29,13 @@ export const Sider = () => {
     </Menu.Item>
   );
 
+  const formFieldDynamicMenu = (
+    <Menu.Item key="fieldDynamicList" icon={<FormOutlined />}>
+      <Link to="/field-dynamic/list">Field Dynamic</Link>
+      {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
+    </Menu.Item>
+  );
+
   const masterCategoryMenu = (
     <Menu.Item key="masterCategory" icon={<TableOutlined />}>
       <Link to="/master/category">Category</Link>
@@ -43,6 +50,7 @@ export const Sider = () => {
     return (
       <>
         {formMenu}
+        {formFieldDynamicMenu}
         {masterMenu}
       </>
     );
