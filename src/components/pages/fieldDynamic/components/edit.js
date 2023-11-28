@@ -122,9 +122,7 @@ export const EditFieldDynamicComponent = ({ selectedListField }) => {
               setDataTableEdit([...dataTableEdit]);
             }}
             onClick={(e) => {
-              record.hiddenField
-                ? (record.hiddenField = false)
-                : (record.hiddenField = true);
+              record.hidden ? (record.hidden = false) : (record.hidden = true);
             }}
           />
         );
