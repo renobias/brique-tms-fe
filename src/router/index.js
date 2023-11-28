@@ -4,6 +4,7 @@ import LoginPage from "../pages/login";
 import ListCategoryMasterPage from "../pages/master/category/list";
 import CreateCategoriesMasterPage from "../pages/master/category/create";
 import EditCategoriesMasterPage from "../pages/master/category/edit";
+import ListFieldDynamicPage from "../pages/field-dynamic/list";
 import React from "react";
 import ListFormPage from "../pages/form/list";
 import EditFormPage from "../pages/form/edit";
@@ -46,6 +47,10 @@ export const Router = () => {
     {
       path: "/master/category/edit",
       element: <EditCategoriesMasterPage />,
+    },
+    {
+      path: "/field-dynamic/list",
+      element: <ListFieldDynamicPage />,
     },
     //   {
     //     path: "*",

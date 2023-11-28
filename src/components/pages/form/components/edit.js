@@ -737,55 +737,87 @@ export const EditFormComponent = () => {
                                           ? formEdit?.getFieldsValue()?.fields[
                                               field.name
                                             ]?.fieldType == "selection" && (
-                                              <Form.Item
-                                                label="Selection Fetch"
-                                                name={[
-                                                  field.name,
-                                                  ["constraint"],
-                                                  "selectionFetch",
-                                                ]}
-                                                rules={[
-                                                  {
-                                                    required: true,
-                                                    message:
-                                                      "Please input selection fetch!",
-                                                  },
-                                                ]}
-                                                // initialValue="user123!"
-                                              >
-                                                <Select
-                                                  placeholder="-- Select --"
-                                                  onChange={() => {
-                                                    getRerender();
-                                                  }}
-                                                  // onClear={onCategoryClear}
-                                                  // defaultValue={}
-                                                >
-                                                  {selectOptions.map(
-                                                    (select) => {
-                                                      return (
-                                                        <Option
-                                                          value={select?.value}
-                                                        >
-                                                          {select?.displayName}
-                                                        </Option>
-                                                      );
-                                                    }
-                                                  )}
-                                                </Select>
-                                              </Form.Item>
-                                            )
-                                          : null}
-                                        {(formEdit?.getFieldsValue()).fields
-                                          ? formEdit?.getFieldValue()?.fields[
-                                              field.name
-                                            ]?.fieldType == "selection" &&
-                                            formEdit?.getFieldValue()?.fields[
-                                              field.name
-                                            ]?.constraint?.selectionFetch ==
-                                              false && (
                                               <>
-                                                {/* Nest Form.List */}
+                                                <Form.Item
+                                                  label="Selection Dynamic Fields"
+                                                  name={[
+                                                    field.name,
+                                                    "constraint",
+                                                    `selectionDynamicFields`,
+                                                  ]}
+                                                  rules={[
+                                                    {
+                                                      required: true,
+                                                      message:
+                                                        "Please input dynamic field!",
+                                                    },
+                                                  ]}
+                                                  // initialValue="user123!"
+                                                >
+                                                  <Select
+                                                    placeholder="-- Select --"
+                                                    // onChange={onCategoryChange}
+                                                    // onClear={onCategoryClear}
+                                                    // defaultValue={}
+                                                  >
+                                                    {selectOptions.map(
+                                                      (select) => {
+                                                        return (
+                                                          <Option
+                                                            value={
+                                                              select?.value
+                                                            }
+                                                          >
+                                                            {
+                                                              select?.displayName
+                                                            }
+                                                          </Option>
+                                                        );
+                                                      }
+                                                    )}
+                                                  </Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                  label="Selection Fetch"
+                                                  name={[
+                                                    field.name,
+                                                    ["constraint"],
+                                                    "selectionFetch",
+                                                  ]}
+                                                  rules={[
+                                                    {
+                                                      required: true,
+                                                      message:
+                                                        "Please input selection fetch!",
+                                                    },
+                                                  ]}
+                                                  // initialValue="user123!"
+                                                >
+                                                  <Select
+                                                    placeholder="-- Select --"
+                                                    onChange={() => {
+                                                      getRerender();
+                                                    }}
+                                                    // onClear={onCategoryClear}
+                                                    // defaultValue={}
+                                                  >
+                                                    {selectOptions.map(
+                                                      (select) => {
+                                                        return (
+                                                          <Option
+                                                            value={
+                                                              select?.value
+                                                            }
+                                                          >
+                                                            {
+                                                              select?.displayName
+                                                            }
+                                                          </Option>
+                                                        );
+                                                      }
+                                                    )}
+                                                  </Select>
+                                                </Form.Item>
                                                 <Form.Item label="Selections">
                                                   <Form.List
                                                     name={[
@@ -893,37 +925,128 @@ export const EditFormComponent = () => {
                                                     )}
                                                   </Form.List>
                                                 </Form.Item>
-                                                {/* <Form.Item
-                                                label="Selection Dynamic Fields"
-                                                name={[
-                                                  field.name,
-                                                  "constraint",
-                                                  `selectionDynamicFields`,
-                                                ]}
-                                                // initialValue="user123!"
-                                              >
-                                                <Select
-                                                  placeholder="-- Select --"
-                                                  // onChange={onCategoryChange}
-                                                  // onClear={onCategoryClear}
-                                                  // defaultValue={}
-                                                >
-                                                  {selectOptions.map(
-                                                    (select) => {
-                                                      return (
-                                                        <Option
-                                                          value={select?.value}
-                                                        >
-                                                          {select?.displayName}
-                                                        </Option>
-                                                      );
-                                                    }
-                                                  )}
-                                                </Select>
-                                              </Form.Item> */}
                                               </>
                                             )
                                           : null}
+                                        {/* {(formEdit?.getFieldsValue()).fields
+                                          ? formEdit?.getFieldValue()?.fields[
+                                              field.name
+                                            ]?.fieldType == "selection" &&
+                                            formEdit?.getFieldValue()?.fields[
+                                              field.name
+                                            ]?.constraint?.selectionFetch ==
+                                              false && (
+                                              <>
+                                                <Form.Item label="Selections">
+                                                  <Form.List
+                                                    name={[
+                                                      field.name,
+                                                      ["constraint"],
+                                                      "selections",
+                                                    ]}
+                                                  >
+                                                    {(subFields, subOpt) => (
+                                                      <div
+                                                        style={{
+                                                          display: "flex",
+                                                          flexDirection:
+                                                            "column",
+                                                          rowGap: 16,
+                                                        }}
+                                                      >
+                                                        {subFields.map(
+                                                          (
+                                                            subField,
+                                                            indexSelectionField
+                                                          ) => (
+                                                            <Space
+                                                              key={subField.key}
+                                                            >
+                                                              {!fieldForm
+                                                                ?.at(index)
+                                                                ?.constraint?.selections?.at(
+                                                                  indexSelectionField
+                                                                )?.isDelete && (
+                                                                <>
+                                                                  <Form.Item
+                                                                    noStyle
+                                                                    name={[
+                                                                      subField.name,
+                                                                      "selection",
+                                                                    ]}
+                                                                  >
+                                                                    <Input placeholder="selection" />
+                                                                  </Form.Item>
+                                                                  <Form.Item
+                                                                    noStyle
+                                                                    name={[
+                                                                      subField.name,
+                                                                      "displayName",
+                                                                    ]}
+                                                                  >
+                                                                    <Input placeholder="display name" />
+                                                                  </Form.Item>
+                                                                  <CloseOutlined
+                                                                    onClick={() => {
+                                                                      console.log(
+                                                                        "on click"
+                                                                      );
+                                                                      // subOpt.remove(
+                                                                      //   subField.name
+                                                                      // );
+                                                                      const fieldsLatest =
+                                                                        formEdit.getFieldsValue();
+                                                                      if (
+                                                                        fieldsLatest
+                                                                          .fields[
+                                                                          index
+                                                                        ]
+                                                                          ?.constraint
+                                                                          ?.selections[
+                                                                          indexSelectionField
+                                                                        ]
+                                                                      ) {
+                                                                        console.log(
+                                                                          "if one"
+                                                                        );
+                                                                        fieldsLatest.fields[
+                                                                          index
+                                                                        ].constraint.selections[
+                                                                          indexSelectionField
+                                                                        ].isDelete = true;
+                                                                        formEdit.setFieldsValue(
+                                                                          {
+                                                                            ...fieldsLatest,
+                                                                          }
+                                                                        );
+                                                                      } else {
+                                                                        subOpt.remove(
+                                                                          subField.name
+                                                                        );
+                                                                      }
+                                                                    }}
+                                                                  />
+                                                                </>
+                                                              )}
+                                                            </Space>
+                                                          )
+                                                        )}
+                                                        <Button
+                                                          type="dashed"
+                                                          onClick={() =>
+                                                            subOpt.add()
+                                                          }
+                                                          block
+                                                        >
+                                                          + Add Selection
+                                                        </Button>
+                                                      </div>
+                                                    )}
+                                                  </Form.List>
+                                                </Form.Item>
+                                              </>
+                                            )
+                                          : null} */}
                                         <Form.Item
                                           label="Notes"
                                           name={[
