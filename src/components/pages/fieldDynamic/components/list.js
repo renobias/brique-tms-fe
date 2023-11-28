@@ -21,7 +21,8 @@ export const ListFieldDynamicComponent = () => {
   const [fieldDynamicList, setFieldDynamicList] = useState([]);
   const navigate = useNavigate();
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
-  const [selectedFieldID, setFieldID] = useState(null);
+  // const [selectedFieldID, setFieldID] = useState(null);
+  const [selectedListField, setSelectedListField] = useState(null);
 
   const { state: stateFieldDynamicList, fire: getFieldDynamicList } =
     useGetList({
@@ -72,7 +73,7 @@ export const ListFieldDynamicComponent = () => {
         return (
           <Button
             onClick={() => {
-              showModalEdit(record?.formFieldID);
+              showModalEdit(record);
               // navigate(`/form/edit?id=${record.id}`);
               // router.push({
               //   pathname: "/master/movies/edit",
@@ -106,8 +107,8 @@ export const ListFieldDynamicComponent = () => {
     });
   }, []);
 
-  const showModalEdit = (formFieldID) => {
-    setFieldID(formFieldID);
+  const showModalEdit = (record) => {
+    setSelectedListField(record);
     setIsOpenModalEdit(true);
   };
   const handleOkEdit = () => {
@@ -201,7 +202,7 @@ export const ListFieldDynamicComponent = () => {
           marginBottom: "20px",
         }}
       >
-        <EditFieldDynamicComponent fieldID={selectedFieldID} />
+        <EditFieldDynamicComponent selectedListField={selectedListField} />
       </Modal>
     </>
   );

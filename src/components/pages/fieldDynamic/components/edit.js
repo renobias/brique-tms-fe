@@ -17,7 +17,7 @@ import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/ut
 const { Title } = Typography;
 const { Option } = Select;
 
-export const EditFieldDynamicComponent = ({ fieldID }) => {
+export const EditFieldDynamicComponent = ({ selectedListField }) => {
   const [formEdit] = Form.useForm();
   const [selectionOptions, setSelectionOptions] = useState([]);
   const [dataTableEdit, setDataTableEdit] = useState([]);
@@ -28,7 +28,7 @@ export const EditFieldDynamicComponent = ({ fieldID }) => {
     dataProviderName: "briqueTms",
     resource: "field-dynamic/selection-dynamic-field",
     query: {
-      dynamicFieldID: fieldID,
+      dynamicFieldID: selectedListField?.formFieldID,
     },
     handleResult: () => {
       if (isSuccesfullRequest(stateSelection?.statusCode)) {
@@ -64,7 +64,7 @@ export const EditFieldDynamicComponent = ({ fieldID }) => {
       dataProviderName: "briqueTms",
       resource: "field-dynamic/selection-dynamic-field",
       query: {
-        dynamicFieldID: fieldID,
+        dynamicFieldID: selectedListField?.formFieldID,
       },
       handleResult: () => {
         if (isSuccesfullRequest(stateSelection?.statusCode)) {
@@ -73,7 +73,7 @@ export const EditFieldDynamicComponent = ({ fieldID }) => {
         }
       },
     });
-  }, [fieldID]);
+  }, [selectedListField]);
 
   const onSelectionChange = (value) => {
     console.log("value -> ", value);
@@ -155,8 +155,14 @@ export const EditFieldDynamicComponent = ({ fieldID }) => {
     >
       <Row>
         <Col span={24}>
-          <TextInformation keyy={"Form Name"} value={"Setoran Tunai"} />
-          <TextInformation keyy={"Field Name"} value={"Cara Penyetoran"} />
+          <TextInformation
+            keyy={"Form Name"}
+            value={selectedListField?.formDisplayName}
+          />
+          <TextInformation
+            keyy={"Field Name"}
+            value={selectedListField?.fieldDisplayName}
+          />
           <Form.Item label="Selection" name="selection">
             <Select
               // style={{ width: "100%" }}
