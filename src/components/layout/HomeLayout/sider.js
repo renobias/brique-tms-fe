@@ -36,6 +36,13 @@ export const Sider = () => {
     </Menu.Item>
   );
 
+  const fieldSelectionFetchMenu = (
+    <Menu.Item key="fieldSelectionFetchList" icon={<FormOutlined />}>
+      <Link to="/field-selection-fetch/list">Field Selection Fetch</Link>
+      {!drawerSiderVisible === "/" && <div className="ant-menu-tree-arrow" />}
+    </Menu.Item>
+  );
+
   const masterCategoryMenu = (
     <Menu.Item key="masterCategory" icon={<TableOutlined />}>
       <Link to="/master/category">Category</Link>
@@ -51,6 +58,7 @@ export const Sider = () => {
       <>
         {formMenu}
         {formFieldDynamicMenu}
+        {fieldSelectionFetchMenu}
         {masterMenu}
       </>
     );

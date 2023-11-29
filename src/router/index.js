@@ -5,6 +5,7 @@ import ListCategoryMasterPage from "../pages/master/category/list";
 import CreateCategoriesMasterPage from "../pages/master/category/create";
 import EditCategoriesMasterPage from "../pages/master/category/edit";
 import ListFieldDynamicPage from "../pages/field-dynamic/list";
+import ListFieldSelectionFetchPage from "../pages/field-selection-fetch/list";
 import React from "react";
 import ListFormPage from "../pages/form/list";
 import EditFormPage from "../pages/form/edit";
@@ -51,6 +52,10 @@ export const Router = () => {
     {
       path: "/field-dynamic/list",
       element: <ListFieldDynamicPage />,
+    },
+    {
+      path: "/field-selection-fetch/list",
+      element: <ListFieldSelectionFetchPage />,
     },
     //   {
     //     path: "*",
