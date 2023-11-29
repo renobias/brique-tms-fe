@@ -165,7 +165,7 @@ export const EditFieldDynamicComponent = ({ selectedListField }) => {
         } else {
           Swal.fire({
             title: "Oops something went wrong!",
-            text: "failed to create form!",
+            text: "failed to update selection dynamic field",
             icon: "error",
           }).then((result) => {
             Swal.hideLoading();
