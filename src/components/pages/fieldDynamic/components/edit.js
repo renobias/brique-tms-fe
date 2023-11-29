@@ -156,7 +156,7 @@ export const EditFieldDynamicComponent = ({ selectedListField }) => {
           console.log("success");
           Swal.fire({
             title: "Success!",
-            text: "successfully create form!",
+            text: "successfully update selection dynamic field!",
             icon: "success",
           }).then((result) => {
             Swal.hideLoading();
