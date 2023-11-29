@@ -191,7 +191,9 @@ export const ListFieldDynamicComponent = () => {
         title="Edit Field Dynamic"
         width={800}
         // className="text-danger"
-        onOk={handleOkEdit}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+        // onOk={handleOkEdit}
         onCancel={handleCancelEdit}
         // okText={translations.yesContinue}
         // cancelText={translations.cancel}
