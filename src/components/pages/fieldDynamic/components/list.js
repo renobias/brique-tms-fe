@@ -10,7 +10,7 @@ import {
   Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +72,8 @@ export const ListFieldDynamicComponent = () => {
         console.log("record -> ", record);
         return (
           <Button
+            type="text"
+            icon={<EditOutlined />}
             onClick={() => {
               showModalEdit(record);
               // navigate(`/form/edit?id=${record.id}`);
@@ -83,9 +85,7 @@ export const ListFieldDynamicComponent = () => {
               //   },
               // });
             }}
-          >
-            Edit
-          </Button>
+          />
         );
       },
     },

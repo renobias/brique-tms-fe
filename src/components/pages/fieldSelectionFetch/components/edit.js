@@ -118,17 +118,18 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
       },
     });
 
-  const { state: updateDynamicFieldState, fire: updateDynamicField } = usePost({
-    dataProviderName: "briqueTms",
-    resource: "field-dynamic/update-dynamic-field",
-    variables: "asdasdasd",
-    meta: { headers: { "Content-Type": "text/plain" } },
-    handleResult: () => {
-      if (isSuccesfullRequest(updateDynamicFieldState?.statusCode)) {
-        console.log("success");
-      }
-    },
-  });
+  const { state: updateSelectionFetchState, fire: updateSelectionFetch } =
+    usePost({
+      dataProviderName: "briqueTms",
+      resource: "field-selection-fetch/update-selection-fetch-field",
+      variables: "asdasdasd",
+      meta: { headers: { "Content-Type": "text/plain" } },
+      handleResult: () => {
+        if (isSuccesfullRequest(updateSelectionFetchState?.statusCode)) {
+          console.log("success");
+        }
+      },
+    });
 
   useEffect(() => {
     formEdit.resetFields();
@@ -236,16 +237,19 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
   };
   const handleSave = (value) => {
     const selectedSelection = JSON.parse(value?.selection);
-    const fieldsDynamicUpdate = dataTableEdit?.map((data) => {
+    console.log("selected Selection -> ", selectedSelection);
+    const selectionFetchUpdate = dataTableEdit?.map((data) => {
+      console.log("data table -> ", data);
       return {
-        selectionID: selectedSelection?.selectionID,
-        fieldID: data?.formFieldID,
-        hidden: data?.hidden,
+        originFormFieldSelectionID: selectedSelection?.selectionID,
+        targetFieldID: data?.formFieldID,
+        targetFormFieldSelectionID: data?.formFieldSelectionId,
+        linked: data?.linked,
       };
     });
 
     const payloadSend = {
-      fields: [...fieldsDynamicUpdate],
+      selectionFields: [...selectionFetchUpdate],
     };
 
     const data = {
@@ -253,6 +257,7 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
       sharedKey: identity?.sharedKey,
       payload: { ...payloadSend },
     };
+    console.log("data save -> ", data);
 
     Swal.fire({
       title: "Saving...",
@@ -263,26 +268,26 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
         Swal.showLoading();
       },
     });
-    updateDynamicField({
+    updateSelectionFetch({
       dataProviderName: "briqueTms",
-      resource: "field-dynamic/update-dynamic-field",
+      resource: "field-selection-fetch/update-selection-fetch-field",
       variables: encryptContent(data),
       meta: { headers: { "Content-Type": "text/plain" } },
       handleResult: () => {
-        if (isSuccesfullRequest(updateDynamicFieldState?.statusCode)) {
+        if (isSuccesfullRequest(updateSelectionFetchState?.statusCode)) {
           console.log("success");
           Swal.fire({
             title: "Success!",
-            text: "successfully update selection dynamic field!",
+            text: "successfully update selection fetch field!",
             icon: "success",
           }).then((result) => {
             Swal.hideLoading();
-            navigate("/field-dynamic/list", { replace: true });
+            // navigate("/field-dynamic/list", { replace: true });
           });
         } else {
           Swal.fire({
             title: "Oops something went wrong!",
-            text: "failed to update selection dynamic field",
+            text: "failed to update selection fetch field",
             icon: "error",
           }).then((result) => {
             Swal.hideLoading();

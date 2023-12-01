@@ -71,6 +71,18 @@ export const CreateFormComponent = () => {
       displayName: "Selection",
       value: "selection",
     },
+    {
+      id: 3,
+      name: "terbilang",
+      displayName: "Terbilang",
+      value: "terbilang",
+    },
+    {
+      id: 4,
+      name: "datepicker",
+      displayName: "Date Picker",
+      value: "datepicker",
+    },
   ]);
   const [rerender, setRerender] = useState(false);
   const { state: stateCategories, fire: getCategories } = useGet({

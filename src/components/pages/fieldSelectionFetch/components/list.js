@@ -10,12 +10,15 @@ import {
   Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
 import { useGetList } from "../../../../hooks/data/useGetList";
-import { EditFieldDynamicComponent, EditFieldSelectinFetchComponent } from "./edit";
+import {
+  EditFieldDynamicComponent,
+  EditFieldSelectinFetchComponent,
+} from "./edit";
 
 export const ListFieldSelectionFetchComponent = () => {
   const [fieldSelectionFetchList, setFieldSelectionFetchList] = useState([]);
@@ -69,6 +72,8 @@ export const ListFieldSelectionFetchComponent = () => {
         console.log("record -> ", record);
         return (
           <Button
+            type="text"
+            icon={<EditOutlined />}
             onClick={() => {
               showModalEdit(record);
               // navigate(`/form/edit?id=${record.id}`);
@@ -80,9 +85,7 @@ export const ListFieldSelectionFetchComponent = () => {
               //   },
               // });
             }}
-          >
-            Edit
-          </Button>
+          />
         );
       },
     },
@@ -170,8 +173,12 @@ export const ListFieldSelectionFetchComponent = () => {
                 pageSize: pageSize,
               },
               handleResult: () => {
-                if (isSuccesfullRequest(stateFieldSelectionFetchList.statusCode)) {
-                  setFieldSelectionFetchList([...stateFieldSelectionFetchList?.data]);
+                if (
+                  isSuccesfullRequest(stateFieldSelectionFetchList.statusCode)
+                ) {
+                  setFieldSelectionFetchList([
+                    ...stateFieldSelectionFetchList?.data,
+                  ]);
                 }
               },
             });
@@ -201,7 +208,9 @@ export const ListFieldSelectionFetchComponent = () => {
           marginBottom: "20px",
         }}
       >
-        <EditFieldSelectinFetchComponent selectedListField={selectedListField} />
+        <EditFieldSelectinFetchComponent
+          selectedListField={selectedListField}
+        />
       </Modal>
     </>
   );

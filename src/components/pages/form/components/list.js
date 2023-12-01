@@ -1,6 +1,16 @@
-import { Card, Col, List, Pagination, Table, Input, Row, Button } from "antd";
+import {
+  Card,
+  Col,
+  List,
+  Pagination,
+  Table,
+  Input,
+  Row,
+  Button,
+  Space,
+} from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +25,7 @@ export const ListFormComponent = () => {
     resource: "form/list",
     pagination: {
       current: 1,
-      pageSize: 10
+      pageSize: 10,
     },
     handleResult: () => {
       if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
@@ -50,20 +60,38 @@ export const ListFormComponent = () => {
       key: "operation",
       render: (_, record) => {
         return (
-          <Button
-            onClick={() => {
-              navigate(`/form/edit?id=${record.id}`);
-              // router.push({
-              //   pathname: "/master/movies/edit",
-              //   query: {
-              //     id: record.id,
-              //     studioId: record.StudioId,
-              //   },
-              // });
-            }}
-          >
-            Edit
-          </Button>
+          <>
+            <Space>
+              <Button
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  navigate(`/form/edit?id=${record.id}`);
+                  // router.push({
+                  //   pathname: "/master/movies/edit",
+                  //   query: {
+                  //     id: record.id,
+                  //     studioId: record.StudioId,
+                  //   },
+                  // });
+                }}
+              />
+              <Button
+                type="text"
+                icon={<EyeOutlined />}
+                onClick={() => {
+                  navigate(`/form/show?id=${record.id}`);
+                  // router.push({
+                  //   pathname: "/master/movies/edit",
+                  //   query: {
+                  //     id: record.id,
+                  //     studioId: record.StudioId,
+                  //   },
+                  // });
+                }}
+              />
+            </Space>
+          </>
         );
       },
     },
@@ -75,7 +103,7 @@ export const ListFormComponent = () => {
       resource: "form/list",
       pagination: {
         current: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       handleResult: () => {
         if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
@@ -136,7 +164,7 @@ export const ListFormComponent = () => {
               resource: "form/list",
               pagination: {
                 current: page,
-                pageSize: pageSize
+                pageSize: pageSize,
               },
               handleResult: () => {
                 if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
