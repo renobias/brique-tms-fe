@@ -383,6 +383,19 @@ export const ShowFormComponent = () => {
                   setFormStructure([...formStructure]);
                 }
               }
+              if (fieldStructure?.constraint?.selectionFetch) {
+                console.log("value -> ", value);
+                const currentSelection = fieldStructure?.selections?.filter(
+                  (selection) => {
+                    return selection.selection == value;
+                  }
+                );
+                if (currentSelection?.length > 0) {
+                  const currentSelectionId =
+                    currentSelection?.at(0)?.selectionId;
+                  console.log("current selection Id-> ", currentSelectionId);
+                }
+              }
             }}
             allowClear
           >
