@@ -36,6 +36,16 @@ export const ShowFormComponent = () => {
     query: { formId },
     handleResult: () => {},
   });
+  const { fire: getSelectionFetch, state: stateSelectionFetch } = useGet({
+    dataProviderName: "briqueTms",
+    resource: "client/fetch-selection",
+    query: { selectionID: null },
+    handleResult: () => {
+      if (isSuccesfullRequest(stateSelectionFetch?.statusCode)) {
+        console.log("success");
+      }
+    },
+  });
 
   useEffect(() => {
     getFormStructure({
@@ -394,6 +404,29 @@ export const ShowFormComponent = () => {
                   const currentSelectionId =
                     currentSelection?.at(0)?.selectionId;
                   console.log("current selection Id-> ", currentSelectionId);
+                  getSelectionFetch({
+                    dataProviderName: "briqueTms",
+                    resource: "client/fetch-selection",
+                    query: { selectionID: currentSelectionId },
+                    handleResult: () => {
+                      if (
+                        isSuccesfullRequest(stateSelectionFetch?.statusCode)
+                      ) {
+                        const indexFieldTarget = formStructure.findIndex(
+                          (fs) => {
+                            return (
+                              fs?.fieldId ==
+                              fieldStructure?.constraint?.selectionFetchOwning
+                                ?.fieldId
+                            );
+                          }
+                        );
+                        formStructure.at(indexFieldTarget).selections =
+                          stateSelectionFetch?.data?.selections;
+                        setFormStructure([...formStructure]);
+                      }
+                    },
+                  });
                 }
               }
             }}
