@@ -27,6 +27,11 @@ const { Option } = Select;
 export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
   const identity = authProvider.getIdentity();
   const navigate = useNavigate();
+  const defaultTargetForm = JSON.stringify({
+    formID: selectedListField?.formID,
+    name: selectedListField?.formName,
+    displayName: selectedListField?.formDisplayName,
+  });
   const [formEdit] = Form.useForm();
   const [targetFormOptions, setTargetFormOptions] = useState([]);
   const [targetFieldOptions, setTargetFieldOptions] = useState([]);
@@ -156,6 +161,9 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
       handleResult: () => {
         if (isSuccesfullRequest(stateTargetFormOptions?.statusCode)) {
           setTargetFormOptions([...stateTargetFormOptions?.data?.forms]);
+          console.log("selected list field -> ", selectedListField);
+          formEdit.setFieldValue("targetForm", defaultTargetForm);
+          onTargetFormChange(defaultTargetForm);
         }
       },
     });
@@ -389,8 +397,12 @@ export const EditFieldSelectinFetchComponent = ({ selectedListField }) => {
           </Form.Item>
           <Form.Item label="Target Form" name="targetForm">
             <Select
-              disabled={stateTargetFormOptions?.isLoading}
+              // disabled={stateTargetFormOptions?.isLoading}
+              disabled={true}
               // style={{ width: "100%" }}
+              // onSelect={(value) => {
+              //   onTargetFormChange(value);
+              // }}
               placeholder="-- Form Target --"
               onChange={(value) => {
                 onTargetFormChange(value);
