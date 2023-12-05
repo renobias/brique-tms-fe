@@ -424,6 +424,10 @@ export const ShowFormComponent = () => {
                         formStructure.at(indexFieldTarget).selections =
                           stateSelectionFetch?.data?.selections;
                         setFormStructure([...formStructure]);
+                        // form.setFieldsValue({[]: null})
+                        form.resetFields([
+                          formStructure.at(indexFieldTarget)?.fieldName,
+                        ]);
                       }
                     },
                   });
