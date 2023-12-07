@@ -1,14 +1,17 @@
 import { Card, Col, List, Pagination, Table, Input, Row, Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, FilterOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../../definitions";
 import { isSuccesfullRequest } from "../../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
 import { useGetList } from "../../../../../hooks/data/useGetList";
 
+const { Search } = Input;
+
 export const ListCategoryMasterComponent = () => {
   const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
+  const [textSearch, setTextSearch] = useState("");
 
   const { state: stateCategoryList, fire: getCategoryList } = useGetList({
     dataProviderName: "briqueTms",
@@ -16,6 +19,9 @@ export const ListCategoryMasterComponent = () => {
     pagination: {
       current: 1,
       pageSize: 10,
+    },
+    searching: {
+      keyword: textSearch,
     },
     handleResult: () => {
       if (isSuccesfullRequest(stateCategoryList.statusCode)) {
@@ -66,6 +72,9 @@ export const ListCategoryMasterComponent = () => {
         current: 1,
         pageSize: 10,
       },
+      searching: {
+        keyword: textSearch,
+      },
       handleResult: () => {
         if (isSuccesfullRequest(stateCategoryList.statusCode)) {
           setCategoryList([...stateCategoryList?.data]);
@@ -73,6 +82,26 @@ export const ListCategoryMasterComponent = () => {
       },
     });
   }, []);
+
+  const onSearch = (value) => {
+    console.log("onsearch -> ", value);
+    getCategoryList({
+      dataProviderName: "briqueTms",
+      resource: "form/categories/list",
+      pagination: {
+        current: 1,
+        pageSize: 10,
+      },
+      searching: {
+        keyword: textSearch,
+      },
+      handleResult: () => {
+        if (isSuccesfullRequest(stateCategoryList.statusCode)) {
+          setCategoryList([...stateCategoryList?.data]);
+        }
+      },
+    });
+  };
   return (
     <>
       <Row>
@@ -80,7 +109,7 @@ export const ListCategoryMasterComponent = () => {
           <h2 style={{ marginBottom: "25px" }}>Master Category</h2>
         </Col>
         <Col span={6} style={{ textAlign: "end" }}>
-          <Button
+          {/* <Button
             icon={<PlusOutlined />}
             type="primary"
             style={{
@@ -93,18 +122,51 @@ export const ListCategoryMasterComponent = () => {
             }}
           >
             Add
-          </Button>
+          </Button> */}
         </Col>
       </Row>
       <Row style={{ marginBottom: "30px" }}>
-        <Col span={8}></Col>
+        <Col span={8}>
+          <Button
+            icon={<PlusOutlined />}
+            type="primary"
+            style={{
+              width: "43px",
+              height: "43px",
+              backgroundColor: colorTheme.Background.buttonPositive["light"],
+            }}
+            shape={"circle"}
+            onClick={() => {
+              navigate("/master/category/create");
+            }}
+          />
+        </Col>
         <Col span={8} />
         <Col span={8} style={{ alignItems: "end" }}>
-          {/* <Search
-            placeholder="cari judul movie"
-            allowClear
-          // onSearch={onSearch}
-          /> */}
+          <Row gutter={10}>
+            <Col span={20}>
+              <Search
+                placeholder="cari nama category atau display name category"
+                // allowClear
+                onChange={(e) => {
+                  console.log("value on change -> ", e.target.value);
+                  setTextSearch(e.target.value);
+                }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col span={2}>
+              <Button
+                icon={<FilterOutlined />}
+                type="primary"
+                // shape="circle"
+                style={{
+                  backgroundColor:
+                    colorTheme.Background.buttonPositive["light"],
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Table
@@ -116,6 +178,7 @@ export const ListCategoryMasterComponent = () => {
           total: stateCategoryList?.totalAllData, // Total number of items
           showSizeChanger: true, // Show option to change pfullname size
           pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+          current: parseInt(stateCategoryList?.page),
           onChange: (page, pageSize) => {
             getCategoryList({
               dataProviderName: "briqueTms",
