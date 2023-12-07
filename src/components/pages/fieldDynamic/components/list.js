@@ -10,12 +10,14 @@ import {
   Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, FilterOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
 import { useGetList } from "../../../../hooks/data/useGetList";
 import { EditFieldDynamicComponent } from "./edit";
+
+const { Search } = Input;
 
 export const ListFieldDynamicComponent = () => {
   const [fieldDynamicList, setFieldDynamicList] = useState([]);
@@ -23,6 +25,7 @@ export const ListFieldDynamicComponent = () => {
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   // const [selectedFieldID, setFieldID] = useState(null);
   const [selectedListField, setSelectedListField] = useState(null);
+  const [textSearch, setTextSearch] = useState("");
 
   const { state: stateFieldDynamicList, fire: getFieldDynamicList } =
     useGetList({
@@ -31,6 +34,9 @@ export const ListFieldDynamicComponent = () => {
       pagination: {
         current: 1,
         pageSize: 10,
+      },
+      searching: {
+        keyword: textSearch,
       },
       handleResult: () => {
         if (isSuccesfullRequest(stateFieldDynamicList.statusCode)) {
@@ -99,6 +105,9 @@ export const ListFieldDynamicComponent = () => {
         current: 1,
         pageSize: 10,
       },
+      searching: {
+        keyword: textSearch,
+      },
       handleResult: () => {
         if (isSuccesfullRequest(stateFieldDynamicList.statusCode)) {
           setFieldDynamicList([...stateFieldDynamicList?.data]);
@@ -118,6 +127,26 @@ export const ListFieldDynamicComponent = () => {
   const handleCancelEdit = () => {
     setIsOpenModalEdit(false);
   };
+  const onSearch = (value) => {
+    console.log("onsearch -> ", value);
+    getFieldDynamicList({
+      dataProviderName: "briqueTms",
+      resource: "field-dynamic/list",
+      pagination: {
+        current: 1,
+        pageSize: 10,
+      },
+      searching: {
+        keyword: textSearch,
+      },
+      handleResult: () => {
+        if (isSuccesfullRequest(stateFieldDynamicList.statusCode)) {
+          setFieldDynamicList([...stateFieldDynamicList?.data]);
+        }
+      },
+    });
+  };
+
   return (
     <>
       <Row>
@@ -125,7 +154,7 @@ export const ListFieldDynamicComponent = () => {
           <h2 style={{ marginBottom: "25px" }}>Field Dynamic</h2>
         </Col>
         <Col span={6} style={{ textAlign: "end" }}>
-          <Button
+          {/* <Button
             icon={<PlusOutlined />}
             type="primary"
             style={{
@@ -141,18 +170,54 @@ export const ListFieldDynamicComponent = () => {
             }}
           >
             Add
-          </Button>
+          </Button> */}
         </Col>
       </Row>
       <Row style={{ marginBottom: "30px" }}>
-        <Col span={8}></Col>
+        <Col span={8}>
+          {/* <Button
+            icon={<PlusOutlined />}
+            type="primary"
+            style={{
+              width: "43px",
+              height: "43px",
+              backgroundColor: colorTheme.Background.buttonPositive["light"],
+            }}
+            shape={"circle"}
+            onClick={() => {
+              // navigate("/form/create");
+              // router.push({
+              //   pathname: "/master/movies/create",
+              // });
+            }}
+          /> */}
+        </Col>
         <Col span={8} />
         <Col span={8} style={{ alignItems: "end" }}>
-          {/* <Search
-            placeholder="cari judul movie"
-            allowClear
-          // onSearch={onSearch}
-          /> */}
+          <Row gutter={10}>
+            <Col span={20}>
+              <Search
+                placeholder="cari display name field, display name form, atau display name category form"
+                // allowClear
+                onChange={(e) => {
+                  console.log("value on change -> ", e.target.value);
+                  setTextSearch(e.target.value);
+                }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col span={2}>
+              <Button
+                icon={<FilterOutlined />}
+                type="primary"
+                // shape="circle"
+                style={{
+                  backgroundColor:
+                    colorTheme.Background.buttonPositive["light"],
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Table
@@ -164,13 +229,17 @@ export const ListFieldDynamicComponent = () => {
           total: stateFieldDynamicList?.totalAllData, // Total number of items
           showSizeChanger: true, // Show option to change pfullname size
           pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+          current: parseInt(stateFieldDynamicList?.page),
           onChange: (page, pageSize) => {
             getFieldDynamicList({
               dataProviderName: "briqueTms",
-              resource: "form/list",
+              resource: "field-dynamic/list",
               pagination: {
                 current: page,
                 pageSize: pageSize,
+              },
+              searching: {
+                keyword: textSearch,
               },
               handleResult: () => {
                 if (isSuccesfullRequest(stateFieldDynamicList.statusCode)) {

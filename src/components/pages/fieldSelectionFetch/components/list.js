@@ -10,7 +10,7 @@ import {
   Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, FilterOutlined } from "@ant-design/icons";
 import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
@@ -20,12 +20,15 @@ import {
   EditFieldSelectinFetchComponent,
 } from "./edit";
 
+const { Search } = Input;
+
 export const ListFieldSelectionFetchComponent = () => {
   const [fieldSelectionFetchList, setFieldSelectionFetchList] = useState([]);
   const navigate = useNavigate();
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   // const [selectedFieldID, setFieldID] = useState(null);
   const [selectedListField, setSelectedListField] = useState(null);
+  const [textSearch, setTextSearch] = useState("");
 
   const {
     state: stateFieldSelectionFetchList,
@@ -36,6 +39,9 @@ export const ListFieldSelectionFetchComponent = () => {
     pagination: {
       current: 1,
       pageSize: 10,
+    },
+    searching: {
+      keyword: textSearch,
     },
     handleResult: () => {
       if (isSuccesfullRequest(stateFieldSelectionFetchList.statusCode)) {
@@ -99,6 +105,9 @@ export const ListFieldSelectionFetchComponent = () => {
         current: 1,
         pageSize: 10,
       },
+      searching: {
+        keyword: textSearch,
+      },
       handleResult: () => {
         if (isSuccesfullRequest(stateFieldSelectionFetchList.statusCode)) {
           setFieldSelectionFetchList([...stateFieldSelectionFetchList?.data]);
@@ -118,6 +127,26 @@ export const ListFieldSelectionFetchComponent = () => {
   const handleCancelEdit = () => {
     setIsOpenModalEdit(false);
   };
+
+  const onSearch = (value) => {
+    console.log("onsearch -> ", value);
+    getFieldSelectionFetchList({
+      dataProviderName: "briqueTms",
+      resource: "field-selection-fetch/list",
+      pagination: {
+        current: 1,
+        pageSize: 10,
+      },
+      searching: {
+        keyword: textSearch,
+      },
+      handleResult: () => {
+        if (isSuccesfullRequest(stateFieldSelectionFetchList.statusCode)) {
+          setFieldSelectionFetchList([...stateFieldSelectionFetchList?.data]);
+        }
+      },
+    });
+  };
   return (
     <>
       <Row>
@@ -125,7 +154,7 @@ export const ListFieldSelectionFetchComponent = () => {
           <h2 style={{ marginBottom: "25px" }}>Field Selection Fetch</h2>
         </Col>
         <Col span={6} style={{ textAlign: "end" }}>
-          <Button
+          {/* <Button
             icon={<PlusOutlined />}
             type="primary"
             style={{
@@ -141,18 +170,37 @@ export const ListFieldSelectionFetchComponent = () => {
             }}
           >
             Add
-          </Button>
+          </Button> */}
         </Col>
       </Row>
       <Row style={{ marginBottom: "30px" }}>
         <Col span={8}></Col>
         <Col span={8} />
         <Col span={8} style={{ alignItems: "end" }}>
-          {/* <Search
-              placeholder="cari judul movie"
-              allowClear
-            // onSearch={onSearch}
-            /> */}
+          <Row gutter={10}>
+            <Col span={20}>
+              <Search
+                placeholder="cari display name field, display name form, atau display name category form"
+                // allowClear
+                onChange={(e) => {
+                  console.log("value on change -> ", e.target.value);
+                  setTextSearch(e.target.value);
+                }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col span={2}>
+              <Button
+                icon={<FilterOutlined />}
+                type="primary"
+                // shape="circle"
+                style={{
+                  backgroundColor:
+                    colorTheme.Background.buttonPositive["light"],
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Table
@@ -164,6 +212,7 @@ export const ListFieldSelectionFetchComponent = () => {
           total: stateFieldSelectionFetchList?.totalAllData, // Total number of items
           showSizeChanger: true, // Show option to change pfullname size
           pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+          current: stateFieldSelectionFetchList?.page,
           onChange: (page, pageSize) => {
             getFieldSelectionFetchList({
               dataProviderName: "briqueTms",
@@ -171,6 +220,9 @@ export const ListFieldSelectionFetchComponent = () => {
               pagination: {
                 current: page,
                 pageSize: pageSize,
+              },
+              searching: {
+                keyword: textSearch,
               },
               handleResult: () => {
                 if (

@@ -148,12 +148,12 @@ export const ListFormComponent = () => {
   };
   return (
     <>
-      {/* <Row>
+      <Row>
         <Col span={18}>
           <h2 style={{ marginBottom: "25px" }}>Form</h2>
         </Col>
         <Col span={6} style={{ textAlign: "end" }}>
-          <Button
+          {/* <Button
             icon={<PlusOutlined />}
             type="primary"
             style={{
@@ -167,9 +167,9 @@ export const ListFormComponent = () => {
               //   pathname: "/master/movies/create",
               // });
             }}
-          />
+          /> */}
         </Col>
-      </Row> */}
+      </Row>
       <Row style={{ marginBottom: "30px" }}>
         <Col span={8}>
           <Button
