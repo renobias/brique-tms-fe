@@ -8,9 +8,9 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
-        ...query,
-        accessToken: identity?.token,
-      })}`
+          ...query,
+          accessToken: identity?.token,
+        })}`
       : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     const { headers, method } = meta ?? {};
@@ -36,9 +36,9 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
 
     const url = query
       ? `${apiUrl}/${resource}/?${queryString.stringify({
-        ...query,
-        accessToken: identity?.token,
-      })}`
+          ...query,
+          accessToken: identity?.token,
+        })}`
       : `${apiUrl}/${resource}?accessToken=${identity?.token}`;
 
     console.log("url -> ", url);
@@ -57,11 +57,12 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
     };
   },
 
-  getList: async ({ resource, pagination, meta }) => {
+  getList: async ({ resource, pagination, searching, meta }) => {
     const identity = authProvider.getIdentity();
     const url = `${apiUrl}/${resource}`;
 
     const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+    const { keyword = "" } = searching ?? {};
 
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = method ?? "get";
@@ -70,12 +71,14 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
       accessToken: String,
       page: Number,
       per_page: Number,
+      keyword_search: String,
     };
 
     if (mode === "server") {
       query.accessToken = identity?.token;
       query.page = current;
       query.per_page = pageSize;
+      query.keyword_search = keyword;
     }
 
     const { data, status, statusText, headers } = await httpClient[
@@ -145,5 +148,5 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
     return apiUrl;
   },
 
-  custom: async () => { },
+  custom: async () => {},
 });

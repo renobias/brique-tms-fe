@@ -94,10 +94,12 @@ export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
 
   /** END NEW */
 
-  getList: async ({ resource, pagination, meta }) => {
+  getList: async ({ resource, pagination, searching, meta }) => {
     const url = `${apiUrl}/${resource}`;
+    console.log("seatching -> ", searching);
 
     const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+    const { keyword = "" } = searching ?? {};
 
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = method ?? "get";
@@ -105,11 +107,13 @@ export const reqresDataProvider = (apiUrl, httpClient = reqresAxios) => ({
     const query = {
       page: Number,
       per_page: Number,
+      keyword_search: String,
     };
 
     if (mode === "server") {
       query.page = current;
       query.per_page = pageSize;
+      query.keyword_search = keyword;
     }
 
     const { data, status, statusText, headers } = await httpClient[
