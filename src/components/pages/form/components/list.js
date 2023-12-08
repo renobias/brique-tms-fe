@@ -433,39 +433,45 @@ export const ListFormComponent = () => {
         dataSource={formStructureList}
         columns={columns}
         loading={stateFormStructureList.isLoading}
-        pagination={{
-          pfullnameSize: stateFormStructureList?.perPage, // Number of items per pfullname
-          total: stateFormStructureList?.totalAllData, // Total number of items
-          showSizeChanger: true, // Show option to change pfullname size
-          current: parseInt(stateFormStructureList?.page),
-          pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
-          onChange: (page, pageSize) => {
-            getFormList({
-              dataProviderName: "briqueTms",
-              resource: "form/list",
-              pagination: {
-                current: page,
-                pageSize: pageSize,
-              },
-              searching: {
-                keyword: textSearch,
-              },
-              filter,
-              handleResult: () => {
-                if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
-                  setFormStructureList([...stateFormStructureList?.data]);
-                }
-                if (isNoData(stateFormStructureList.statusCode)) {
-                  setFormStructureList([]);
-                }
-              },
-            });
-          },
-          // onShowSizeChange: (current, size) => {
-          //   console.log("current -> ", current);
-          //   console.log("size -> ", size);
-          // }
-        }}
+        pagination={
+          formStructureList.length > 0
+            ? {
+                pfullnameSize: stateFormStructureList?.perPage, // Number of items per pfullname
+                total: stateFormStructureList?.totalAllData, // Total number of items
+                showSizeChanger: true, // Show option to change pfullname size
+                current: parseInt(stateFormStructureList?.page),
+                pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
+                onChange: (page, pageSize) => {
+                  getFormList({
+                    dataProviderName: "briqueTms",
+                    resource: "form/list",
+                    pagination: {
+                      current: page,
+                      pageSize: pageSize,
+                    },
+                    searching: {
+                      keyword: textSearch,
+                    },
+                    filter,
+                    handleResult: () => {
+                      if (
+                        isSuccesfullRequest(stateFormStructureList.statusCode)
+                      ) {
+                        setFormStructureList([...stateFormStructureList?.data]);
+                      }
+                      if (isNoData(stateFormStructureList.statusCode)) {
+                        setFormStructureList([]);
+                      }
+                    },
+                  });
+                },
+                // onShowSizeChange: (current, size) => {
+                //   console.log("current -> ", current);
+                //   console.log("size -> ", size);
+                // }
+              }
+            : false
+        }
         scroll={{ y: `calc(100vh - 400px)` }}
       />
       <Modal
