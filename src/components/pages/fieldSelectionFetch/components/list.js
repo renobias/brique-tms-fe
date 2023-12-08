@@ -212,7 +212,7 @@ export const ListFieldSelectionFetchComponent = () => {
           total: stateFieldSelectionFetchList?.totalAllData, // Total number of items
           showSizeChanger: true, // Show option to change pfullname size
           pfullnameSizeOptions: ["10", "20", "30"], // Pfullname size options
-          current: stateFieldSelectionFetchList?.page,
+          current: parseInt(stateFieldSelectionFetchList?.page),
           onChange: (page, pageSize) => {
             getFieldSelectionFetchList({
               dataProviderName: "briqueTms",

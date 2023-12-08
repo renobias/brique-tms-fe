@@ -57,7 +57,7 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
     };
   },
 
-  getList: async ({ resource, pagination, searching, meta }) => {
+  getList: async ({ resource, pagination, searching, filter = {}, meta }) => {
     const identity = authProvider.getIdentity();
     const url = `${apiUrl}/${resource}`;
 
@@ -72,6 +72,7 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
       page: Number,
       per_page: Number,
       keyword_search: String,
+      filter: String,
     };
 
     if (mode === "server") {
@@ -79,6 +80,7 @@ export const briqueTmsDataProvider = (apiUrl, httpClient = briqueTmsAxios) => ({
       query.page = current;
       query.per_page = pageSize;
       query.keyword_search = keyword;
+      query.filter = JSON.stringify(filter);
     }
 
     const { data, status, statusText, headers } = await httpClient[

@@ -8,6 +8,8 @@ import {
   Row,
   Button,
   Space,
+  Modal,
+  Select,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,12 +22,20 @@ import { colorTheme } from "../../../../definitions";
 import { isSuccesfullRequest } from "../../../../rest-data-provider/briqueTms/utils";
 import { useNavigate } from "react-router-dom";
 import { useGetList } from "../../../../hooks/data/useGetList";
+import { useGet } from "../../../../hooks/data/useGet";
+import { isNoData } from "../../../../rest-data-provider/briqueTms/utils/flag";
 
 const { Search } = Input;
+const { Option } = Select;
 
 export const ListFormComponent = () => {
   const [formStructureList, setFormStructureList] = useState([]);
   const [textSearch, setTextSearch] = useState("");
+  const defaultFilter = {
+    category: null,
+  };
+  const [filter, setFilter] = useState(defaultFilter);
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
   const navigate = useNavigate();
 
   const { state: stateFormStructureList, fire: getFormList } = useGetList({
@@ -38,9 +48,13 @@ export const ListFormComponent = () => {
     searching: {
       keyword: textSearch,
     },
+    filter,
     handleResult: () => {
       if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
         setFormStructureList([...stateFormStructureList?.data]);
+      }
+      if (isNoData(stateFormStructureList.statusCode)) {
+        setFormStructureList([]);
       }
     },
   });
@@ -119,9 +133,13 @@ export const ListFormComponent = () => {
       searching: {
         keyword: textSearch,
       },
+      filter,
       handleResult: () => {
         if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
           setFormStructureList([...stateFormStructureList?.data]);
+        }
+        if (isNoData(stateFormStructureList.statusCode)) {
+          setFormStructureList([]);
         }
       },
     });
@@ -139,13 +157,191 @@ export const ListFormComponent = () => {
       searching: {
         keyword: textSearch,
       },
+      filter,
       handleResult: () => {
+        console.log("status code -> ", stateFormStructureList.statusCode);
         if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
           setFormStructureList([...stateFormStructureList?.data]);
+        }
+        if (isNoData(stateFormStructureList.statusCode)) {
+          setFormStructureList([]);
         }
       },
     });
   };
+
+  const showFilter = () => {
+    setIsOpenFilter(true);
+  };
+  const handleOkFilter = () => {
+    setIsOpenFilter(false);
+  };
+  const handleCancelFilter = () => {
+    setIsOpenFilter(false);
+  };
+
+  function RenderFilterContent() {
+    const [filterInternal, setFilterInternal] = useState({
+      category: null,
+    });
+    const [rerenderFilter, setRerenderFilter] = useState(false);
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const { state: stateCategoryOptions, fire: getCategoryOptions } = useGet({
+      dataProviderName: "briqueTms",
+      resource: "form/categories",
+      handleResult: () => {
+        if (isSuccesfullRequest(stateCategoryOptions?.statusCode)) {
+        }
+      },
+    });
+
+    useEffect(() => {
+      setFilterInternal({ ...filter });
+      getCategoryOptions({
+        dataProviderName: "briqueTms",
+        resource: "form/categories",
+        handleResult: () => {
+          if (isSuccesfullRequest(stateCategoryOptions?.statusCode)) {
+            const categoryOptions = stateCategoryOptions?.data?.categories?.map(
+              (category) => {
+                return {
+                  value: category?.id,
+                  label: category?.displayName,
+                };
+              }
+            );
+            setCategoryOptions([...categoryOptions]);
+            // setFilterInternal({ ...filter });
+          }
+        },
+      });
+    }, []);
+
+    const toggleRerenderFilter = () => {
+      setRerenderFilter(!rerenderFilter);
+    };
+
+    const handleCategorySelectChange = (value) => {
+      console.log("value -> ", value);
+      const selectedCategory = JSON.parse(value);
+      // filter.category = {
+      //   id: selectedCategory?.value,
+      //   label: selectedCategory?.label,
+      // };
+      // toggleRerenderFilter();
+      setFilterInternal({
+        ...filterInternal,
+        category: {
+          id: selectedCategory?.value,
+          label: selectedCategory?.label,
+        },
+      });
+    };
+    const handleOnReset = () => {
+      setFilter(defaultFilter);
+      getFormList({
+        dataProviderName: "briqueTms",
+        resource: "form/list",
+        pagination: {
+          current: 1,
+          pageSize: 10,
+        },
+        searching: {
+          keyword: textSearch,
+        },
+        filter: defaultFilter,
+        handleResult: () => {
+          if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
+            setFormStructureList([...stateFormStructureList?.data]);
+          }
+          if (isNoData(stateFormStructureList.statusCode)) {
+            setFormStructureList([]);
+          }
+        },
+      });
+      handleCancelFilter();
+    };
+    const handleOnFilter = () => {
+      getFormList({
+        dataProviderName: "briqueTms",
+        resource: "form/list",
+        pagination: {
+          current: 1,
+          pageSize: 10,
+        },
+        searching: {
+          keyword: textSearch,
+        },
+        // filter: {
+        //   ...filter,
+        //   categoryId: filter?.category?.value,
+        //   category: undefined,
+        // },
+        // filter: { categoryId: filter?.category?.value },
+        filter: {
+          ...filterInternal,
+        },
+        handleResult: () => {
+          console.log("status code -> ", stateFormStructureList.statusCode);
+          if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
+            setFormStructureList([...stateFormStructureList?.data]);
+            setFilter(filterInternal);
+          }
+          if (isNoData(stateFormStructureList.statusCode)) {
+            console.log("no data");
+            setFormStructureList([]);
+          }
+        },
+      });
+      handleCancelFilter();
+    };
+    return (
+      <>
+        <div style={{ padding: "10px" }}>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col span={24} style={{ marginBottom: "5px" }}>
+              <h5>Category</h5>
+            </Col>
+            <Col span={24}>
+              <Select
+                disabled={stateCategoryOptions?.isLoading}
+                style={{ width: "100%" }}
+                onChange={handleCategorySelectChange}
+                placeholder="-- select category --"
+                // options={categoryOptions}
+                value={filterInternal?.category}
+              >
+                {categoryOptions.map((category) => {
+                  return (
+                    <Option value={JSON.stringify(category)}>
+                      {category?.label}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Col>
+          </Row>
+          <Row gutter={5} justify={"end"} style={{ marginTop: "20px" }}>
+            <Col>
+              <Button onClick={handleOnReset}>Reset</Button>
+            </Col>
+            <Col>
+              <Button
+                type={"primary"}
+                style={{
+                  backgroundColor:
+                    colorTheme.Background.buttonPositive["light"],
+                }}
+                onClick={handleOnFilter}
+              >
+                Filter
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <Row>
@@ -206,6 +402,7 @@ export const ListFormComponent = () => {
             </Col>
             <Col span={2}>
               <Button
+                onClick={showFilter}
                 icon={<FilterOutlined />}
                 type="primary"
                 // shape="circle"
@@ -215,6 +412,20 @@ export const ListFormComponent = () => {
                 }}
               />
             </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row style={{ marginBottom: "30px" }}>
+        <Col span={8}>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col span={24}>
+              <h4>Filter by </h4>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={4}>Category</Col>
+            <Col span={2}>:</Col>
+            <Col span={14}>{filter?.category?.label ?? "-"}</Col>
           </Row>
         </Col>
       </Row>
@@ -239,9 +450,13 @@ export const ListFormComponent = () => {
               searching: {
                 keyword: textSearch,
               },
+              filter,
               handleResult: () => {
                 if (isSuccesfullRequest(stateFormStructureList.statusCode)) {
                   setFormStructureList([...stateFormStructureList?.data]);
+                }
+                if (isNoData(stateFormStructureList.statusCode)) {
+                  setFormStructureList([]);
                 }
               },
             });
@@ -253,6 +468,23 @@ export const ListFormComponent = () => {
         }}
         scroll={{ y: `calc(100vh - 400px)` }}
       />
+      <Modal
+        title="Filter"
+        open={isOpenFilter}
+        // onOk={handleOkFilter}
+        onCancel={handleCancelFilter}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okText={"Filter"}
+        okButtonProps={{ style: { display: "none" } }}
+        // okButtonProps={{
+        //   style: {
+        //     backgroundColor: colorTheme.Background.buttonPositive["light"],
+        //   },
+        // }}
+        centered
+      >
+        <RenderFilterContent />
+      </Modal>
     </>
   );
 };

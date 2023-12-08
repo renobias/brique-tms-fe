@@ -8,6 +8,7 @@ export function useGetList({
   resource,
   pagination,
   searching,
+  filter,
   meta,
   handleResult,
 }) {
@@ -31,9 +32,11 @@ export function useGetList({
     resource: resourceFire,
     pagination: paginationFire,
     searching: searchingFire,
+    filter: filterFire,
     meta: metaFire,
     handleResult: handleResultFire,
   }) {
+    console.log("filter -> ", filter);
     // async function fire() {
     try {
       setState({
@@ -55,6 +58,7 @@ export function useGetList({
         resource: resourceFire || resource,
         pagination: paginationFire || pagination,
         searching: searchingFire || searching,
+        filter: filterFire || filter,
         meta: metaFire || meta,
       });
       // const { data, status, statusText, total, total_pages, total_all_data } = await dataProvider(pickDataProvider(dataProviderName)).getList({ resource, pagination, meta });
