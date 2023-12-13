@@ -22,7 +22,7 @@ export const useBaseApi = (httpClient = briqueTmsAxios) => {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "config.json",
+      url: "/config.json",
     })
       .then(({ data }) => {
         setBaseApi(data[getBaseUrlClientType()]);
