@@ -433,6 +433,7 @@ export const ListFormComponent = () => {
         dataSource={formStructureList}
         columns={columns}
         loading={stateFormStructureList.isLoading}
+        // style={{height: "10px"}}
         pagination={
           formStructureList.length > 0
             ? {
@@ -472,7 +473,7 @@ export const ListFormComponent = () => {
               }
             : false
         }
-        scroll={{ y: `calc(100vh - 400px)` }}
+        scroll={{ y: `calc(100vh - 480px)` }}
       />
       <Modal
         title="Filter"

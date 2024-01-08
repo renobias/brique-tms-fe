@@ -23,11 +23,13 @@ function HomeLayout({ children }) {
   const identity = authProvider.getIdentity();
   return (
     <AntdLayout style={containerHomeStyles}>
-      <Header />
+      <Sider />
       <AntdLayout style={containerHomeContentStyles}>
-        <Sider />
-        <AntdLayout.Content>
-          <div style={wrapperHomeContentStyles}>{children}</div>
+        <Header />
+        <AntdLayout.Content style={wrapperHomeContentStyles}>
+          {children}
+          {/* <div>{children}</div> */}
+          {/** masalahnya distyle sini jadi ngescroll */}
         </AntdLayout.Content>
       </AntdLayout>
     </AntdLayout>
