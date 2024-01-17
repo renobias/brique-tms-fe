@@ -50,6 +50,7 @@ export default function App() {
       <WebGateSecurity>
         <RenderComponent />
       </WebGateSecurity>
+      <RenderComponent />
     </AppProvider>
   );
 }
